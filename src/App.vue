@@ -1,26 +1,41 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <BottomPlayer></BottomPlayer>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import BottomPlayer from './components/BottomPlayer.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    BottomPlayer
   }
 }
 </script>
 
 <style>
+*{
+  margin: 0px;
+  padding: 0px;
+}
+
+@media (max-width: 767px) {
+  body{
+    /*background-image: url('https://images.unsplash.com/photo-1576249435502-2ee2b5064a63?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDIwfHx8ZW58MHx8fHw%3D&w=1000&q=80https://i0.hippopx.com/photos/144/586/492/people-crowd-party-spectators-preview.jpg');*/
+    /*background-color: black;*/
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+  }
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  min-height: 100vh;
 }
 </style>
