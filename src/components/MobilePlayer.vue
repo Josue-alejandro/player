@@ -32,7 +32,7 @@
         </Transition>
         <div>
           <div class="top_bar">
-            <div class="icons_top" @click="minimized = true">
+            <div class="icons_top" @click="minizeWindow">
               <i class="material-icons icons_m">open_in_new</i>
             </div>
             <div class="icons_top" @click="playlistActive = !playlistActive">
@@ -148,6 +148,9 @@ export default {
     }
   },
   props: {
+    mobileMode: {
+      required: true
+    },
     canciones: {
       type: Array,
       required: true
@@ -216,6 +219,13 @@ export default {
       const audio = this.$refs.audioPlayer;
       this.currentTime = parseFloat(event.target.value);
       audio.currentTime = this.currentTime;
+    },
+    minizeWindow(){
+      if(this.mobileMode === true){
+        this.minimized = true
+      }else{
+        this.$emit('un-minimized')
+      }
     },
     dayHandler(day){
       if(day == 'lun'){

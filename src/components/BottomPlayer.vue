@@ -37,7 +37,7 @@
             </ul>
           </div>
         </Transition>
-        <div class="player_bar">
+        <div class="player_bar" v-if="minimizedState === true">
             <div class="play_button" @click="playHandle">
               <Transition name="slide-fade2">
                 <i class="material-icons play_icon" v-if="!isPlaying && isLoading === false">play_arrow</i>
@@ -75,11 +75,14 @@
                 <i class="material-icons icons_m" @click="volumeShow = !volumeShow">volume_up</i>
             </div>
             <div class="icons_div">
-                <i class="material-icons icons_m">open_in_new</i>
+                <i class="material-icons icons_m" @click="minimizedState = false">open_in_new</i>
             </div>
         </div>
-        <MobilePlayer 
+        <Transition name="mini">
+        <MobilePlayer
+        v-if="minimizedState === false"
         class="mobile_bar" 
+        :mobileMode="mobileMode"
         :canciones="canciones" 
         :songData="songData" 
         :duration="duration"
@@ -101,7 +104,9 @@
         @right-handler="rightHandler"
         @emisora-on="emisorasShow = true"
         @select-emisora="selectEmisora"
+        @un-minimized="unMinimized"
         ></MobilePlayer>
+        </Transition>
     </div>
 </template>
 
@@ -126,13 +131,15 @@ import MobilePlayer from './MobilePlayer.vue';
 export default {
   data() {
     return {
+      mobileMode: false,
+      minimizedState: true,
       isPlaying: false,
       isLoading: false,
       volume: 50,
       duration: 100,
       currentTime: 50,
       progressInterval: null,
-      formattedDuration: '03:00',
+      formattedDuration: '00:00',
       listShow: false,
       volumeShow: false,
       emisoraSelected: null,
@@ -332,7 +339,7 @@ export default {
         // Por ejemplo, puedes acceder a la primera canción así:
         const siguienteCancion = this.canciones[0];
         console.log(siguienteCancion)
-        this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor)
+        this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
       }
     },
     previousSong(){
@@ -350,14 +357,21 @@ export default {
         // Por ejemplo, puedes acceder a la primera canción así:
         const siguienteCancion = this.canciones[0];
         console.log(siguienteCancion)
-        this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor)
+        this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
       }
+    },
+    unMinimized(){
+      this.minimizedState = true
     },
     selectEmisora(id){
       this.emisoraSelected = id
     }
   },
   async mounted() {
+    if(window.screen.width < 750){
+      this.mobileMode = true
+    }
+
     const audio = this.$refs.audioPlayer;
 
     audio.addEventListener('loadedmetadata', () => {
@@ -479,18 +493,6 @@ export default {
   right: 100px;
 }
 
-.songs_list::-webkit-scrollbar {
-  width: 6px; /* Ancho de la barra de desplazamiento */
-}
-  
-.songs_list::-webkit-scrollbar-track {
-  background: red; /* Color de fondo de la barra de desplazamiento */
-}
-  
-.songs_list::-webkit-scrollbar-thumb {
-  background: red; /* Color de la barra de desplazamiento */
-}
-
 .song_info{
   margin-left: 20px;
   text-align: left;
@@ -572,9 +574,6 @@ input[type="range"]::-ms-fill-upper {
 }
 
 @media (max-width: 767px) {
-  .player_bar {
-    display: none;
-  }
   .volume-slider {
     display: none;
   }
@@ -584,14 +583,11 @@ input[type="range"]::-ms-fill-upper {
   }
 
   .songs_list{
-    width: 100%s;
+    width: 100%;
   }
 }
 
 @media (min-width: 770px) {
-  .mobile_bar{
-    display: none;
-  }
 }
 
 /*
@@ -667,5 +663,39 @@ input[type="range"]::-ms-fill-upper {
 
 .emisoraImg {
   transition: transform 0.2s;
+}
+
+
+.mini-enter-active
+ {
+  animation: bounce-in 0.5s
+
+}
+
+.mini-leave-to {
+  transition: opacity 0.5s, transform 0.5s ease;
+  opacity: 0;
+  transform: translateY(100vh);
+}
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce-back {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 </style>

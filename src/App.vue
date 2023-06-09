@@ -30,6 +30,29 @@ export default {
   }
 }
 
+*{
+    /* Barra personalizada de firefox */
+    scrollbar-width: thin;
+    scrollbar-color: red rgba(0,0,0,0);
+}
+
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 3px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: red;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
