@@ -36,7 +36,7 @@ export default {
 <style scoped>
 .playlist{
   overflow: scroll;
-  height: 100vh;
+  height: 84vh;
   flex: 0 0 100vw; 
 }
 

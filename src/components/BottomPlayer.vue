@@ -37,7 +37,7 @@
             </ul>
           </div>
         </Transition>
-        <div class="player_bar" v-if="minimizedState === true">
+        <div class="player_bar" v-if="minimizedState === true && mobileMode === false">
             <div class="play_button" @click="playHandle">
               <Transition name="slide-fade2">
                 <i class="material-icons play_icon" v-if="!isPlaying && isLoading === false">play_arrow</i>
@@ -75,7 +75,7 @@
                 <i class="material-icons icons_m" @click="volumeShow = !volumeShow">volume_up</i>
             </div>
             <div class="icons_div">
-                <i class="material-icons icons_m" @click="minimizedState = false">open_in_new</i>
+                <i class="material-icons icons_m" @click="minimizedState = false; listShow = false; volumeShow = false">open_in_new</i>
             </div>
         </div>
         <Transition name="mini">
@@ -370,8 +370,14 @@ export default {
   async mounted() {
     if(window.screen.width < 750){
       this.mobileMode = true
+      this.minimizedState = false
     }
 
+    this.songData.currentSong = this.canciones[0].cancion
+    this.songData.imagen = this.canciones[0].imagen
+    this.songData.id = this.canciones[0].id
+    this.songData.currentAuthor = this.canciones[0].autor
+    this.songData.currentSongName = this.canciones[0].nombre
     const audio = this.$refs.audioPlayer;
 
     audio.addEventListener('loadedmetadata', () => {

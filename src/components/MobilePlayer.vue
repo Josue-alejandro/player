@@ -190,6 +190,9 @@ export default {
     EmisoraPanel
 },
   mounted() {
+    if(window.screen.width < 750){
+      this.minimized = true;
+    }
     this.lun = emisora29.radio.programming[0].programs
     this.mar = emisora29.radio.programming[1].programs
     this.mier = emisora29.radio.programming[2].programs
