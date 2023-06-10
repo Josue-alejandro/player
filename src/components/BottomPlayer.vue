@@ -7,14 +7,14 @@
         :src="songData.currentSong">
         </audio>
         <Transition name="slide-fade2">
-          <EmisoraPanel 
+          <EmisoraDesktop 
           @left-handler="leftHandler"
           @right-handler="rightHandler"
           @select-emisora="selectEmisora"
           :emisorasShow="emisorasShow"
           :emisorasProgress="emisorasProgress"
           :emisoras="emisoras"
-          :emisoraSelected="emisoraSelected"></EmisoraPanel>
+          :emisoraSelected="emisoraSelected"></EmisoraDesktop>
         </Transition>
         <Transition name="slide-fade2">
         <div class="slider-container" v-if="volumeShow">
@@ -75,7 +75,8 @@
                 <i class="material-icons icons_m" @click="volumeShow = !volumeShow">volume_up</i>
             </div>
             <div class="icons_div">
-                <i class="material-icons icons_m" @click="minimizedState = false; listShow = false; volumeShow = false">open_in_new</i>
+                <i class="material-icons icons_m" 
+                @click="minimizedState = false; listShow = false; volumeShow = false; emisorasShow = false">open_in_new</i>
             </div>
         </div>
         <Transition name="mini">
@@ -114,7 +115,7 @@
 import InMyBlood from '../songs/son1.mp3';
 import theSearch from '../songs/son2.mp3';
 import Lost from '../songs/son3.mp3';
-import EmisoraPanel from './EmisoraPanel.vue';
+import EmisoraDesktop from './EmisoraDesktop.vue';
 import SpinIcon from './SpinIcon.vue'
 
 
@@ -257,7 +258,7 @@ export default {
   },
   components:{
     MobilePlayer,
-    EmisoraPanel,
+    EmisoraDesktop,
     SpinIcon
   },
   methods: {

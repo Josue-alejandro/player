@@ -27,18 +27,16 @@ export default {
 <style scoped>
 .emisora {
   background-color: black;
-  max-width: 100vw;
-  width: 100%;
+  max-width: 300px;
   max-height: 90px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
   border-radius: 30px;
-  position: static;
-  bottom: 0px;
-  left: 0px;
-  margin-top: 2em;
+  position: fixed;
+  bottom: 70px;
+  left: 330px;
 }
 
 .emisoras_slider{
@@ -54,7 +52,7 @@ export default {
 
 .emisora img {
   margin: 0.5em;
-  width: 60px;
+  width: 40px;
   transition: transform 0.1s;
 }
 </style>
