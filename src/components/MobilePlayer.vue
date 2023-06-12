@@ -10,11 +10,11 @@
         <i class="material-icons icons_m">open_in_new</i>
       </div>
       <div class="info_top">
-        <img :src="songData.imagen" style="border-radius: 6px;" width="70" height="70" />
+        <img :src="songData.imagen" style="border-radius: 3px; margin-left: 5px;" width="80" height="80" />
         <div class="title">
           <p>EN VIVO</p>
           <span style="font-size: 16px; font-weight: bold;">{{ songData.currentAuthor }}</span>
-          <span>{{ songData.currentSongName }}</span>
+          <span style="font-size: 12px;">{{ songData.currentSongName }}</span>
         </div>
         <div class="play_button" @click="$emit('playSong')">
           <i class="material-icons play_icon" v-if="!isPlaying">play_arrow</i>
@@ -36,7 +36,7 @@
               <i class="material-icons icons_m">open_in_new</i>
             </div>
             <div class="icons_top" @click="playlistActive = !playlistActive">
-              <i class="material-icons icons_m">playlist_play</i>\
+              <i class="material-icons icons_m">playlist_play</i>
             </div>
           </div>
           <div class="cover">
@@ -69,7 +69,7 @@
             <div class="icons_div">
               <i class="material-icons icons_m" @click="$emit('previous-song')">skip_previous</i>
             </div>
-            <div class="play_button" @click="$emit('playSong')">
+            <div class="play_button" @click="$emit('playSong')" style="background-color: rgba(0, 0, 0, 0);">
               <i class="material-icons play_icon" v-if="!isPlaying">play_arrow</i>
               <i class="material-icons play_icon" v-else>pause</i>
             </div>
@@ -84,20 +84,22 @@
         <div>
           <div class="songs_list" :style="{ bottom: playlistActive === true ? '0%' : '-100%' }">
             <div class="playlist_nav">
-              <div style="width: 20px;" @click="playlistActive = !playlistActive">
-                <i class="material-icons icons_m">close</i>
+              <div @click="playlistActive = !playlistActive">
+                <i 
+                class="material-icons icons_m"
+                style="border: 1px solid white; padding: 3px; border-radius: 100%; margin-top: 10px;">close</i>
               </div>
               <div class="playlist_options">
 
                 <div class="options" @click="optionActive = 0"
-                  :style="{ borderBottom: optionActive === 0 ? '1px solid red' : '1px solid rgba(0,0,0,0)' }">
+                  :style="{ borderBottom: optionActive === 0 ? '3px solid red' : '3px solid rgba(0,0,0,0)' }">
                   <div class="icons_nav">
                     <i class="material-icons icons_m">fast_rewind</i>
                   </div>
                   <p>Anteriores</p>
                 </div>
                 <div class="options" @click="optionActive = 1"
-                  :style="{ borderBottom: optionActive === 1 ? '1px solid red' : '1px solid rgba(0,0,0,0)' }">
+                  :style="{ borderBottom: optionActive === 1 ? '3px solid red' : '3px solid rgba(0,0,0,0)' }">
                   <div class="icons_nav">
                     <i class="material-icons icons_m">mic_none</i>
                   </div>
@@ -268,6 +270,7 @@ body {
 
 .options {
   cursor: pointer;
+  width: 60%;
 }
 
 .info_top{
@@ -346,7 +349,6 @@ body {
   color: white;
   justify-content: space-around;
   width: 100%;
-  padding: 1em;
   background-color: rgb(30, 30, 30);
   justify-content: right;
   align-items: end;
@@ -432,6 +434,7 @@ body {
   height: 50px;
   margin-left: 20px;
   margin-right: 20px;
+  background-color: black;
 }
 
 .play_button_top {

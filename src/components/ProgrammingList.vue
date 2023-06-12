@@ -1,35 +1,23 @@
 <template>
     <div class="programming_list">
         <div class="week_div">
-            <p 
-            @click="dayHandler('lun')" 
-            :style="{'background-color': currentDay === 'lun' ? 'rgba(78, 6, 6, 0.7)' : 'rgba(200, 20, 20, 0.7)'}">Lun</p>
-            <p 
-            @click="dayHandler('mar')" 
-            :style="{'background-color': currentDay === 'mar' ? 'rgba(78, 6, 6, 0.7)' : 'rgba(200, 20, 20, 0.7)'}">Mar</p>
-            <p 
-            @click="dayHandler('mier')" 
-            :style="{'background-color': currentDay === 'mier' ? 'rgba(78, 6, 6, 0.7)' : 'rgba(200, 20, 20, 0.7)'}">Mier</p>
-            <p 
-            @click="dayHandler('jue')" 
-            :style="{'background-color': currentDay === 'jue' ? 'rgba(78, 6, 6, 0.7)' : 'rgba(200, 20, 20, 0.7)'}">Jue</p>
-            <p 
-            @click="dayHandler('vie')" 
-            :style="{'background-color': currentDay === 'vie' ? 'rgba(78, 6, 6, 0.7)'  :'rgba(200, 20, 20, 0.7)'}">Vie</p>
-            <p 
-            @click="dayHandler('sab')" 
-            :style="{'background-color': currentDay === 'sab' ? 'rgba(78, 6, 6, 0.7)'  : 'rgba(200, 20, 20, 0.7)'}">Sab</p>
-            <p 
-            @click="dayHandler('dom')" 
-            :style="{'background-color': currentDay === 'dom' ? 'rgba(78, 6, 6, 0.7)'  : 'rgba(200, 20, 20, 0.7)'}">Dom</p>
+          <div
+          v-for="day in days"
+          :key="day.index" 
+          @click="dayHandler(day)" >
+          <p
+          :style="{'background-color': currentDay === day ? 'rgba(78, 6, 6, 0.7)' : 'rgba(0, 0, 0, 0)', 'border-radius': '7px', 'font-size': '12px', 'margin': '0px 20%'}">
+          {{ day.toLocaleUpperCase() }}</p>
+          </div>
         </div>
         <div>
             <ul class="radio_list">
                 <li v-for="pro in day" :key="pro.id">
                     <img :src="pro.image" width="60" style="border-radius: 5px;" />
                     <div class="programming_info">
-                        <span style="font-size: 16px;">{{ pro.title }}</span>
-                        <span>desde: {{ pro.start_time }} hasta las {{ pro.end_time }}</span>
+                        <span style="font-size: 12px; color: grey;">Programas</span>
+                        <span style="font-size: 14px;">{{ pro.title }}</span>
+                        <span style="font-size: 12px; color: grey;">{{ pro.start_time }} - {{ pro.end_time }}</span>
                     </div>
                 </li>
             </ul>
@@ -42,6 +30,7 @@ export default {
     data(){
         return{
             currentDay:'lun',
+            days:['lun', 'mar', 'mier', 'jue', 'vie', 'sab', 'dom']
         }
     },
     props:['day'],
@@ -95,10 +84,15 @@ export default {
   justify-content: center;
 }
 
-.week_div p {
+.week_div div {
   border-right: 1px solid white;
   text-align: center;
-  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   width: 100%;
+}
+
+.week_div div p {
+  cursor: pointer;
 }
 </style>

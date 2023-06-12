@@ -39,7 +39,7 @@
         </Transition>
         <div class="player_bar" v-if="minimizedState === true && mobileMode === false">
             <div class="play_button" @click="playHandle">
-              <Transition name="slide-fade2">
+              <Transition name="change">
                 <i class="material-icons play_icon" v-if="!isPlaying && isLoading === false">play_arrow</i>
                 <i class="material-icons play_icon" v-else-if="isPlaying && isLoading === false">pause</i>
                 <SpinIcon v-else></SpinIcon>
@@ -439,6 +439,8 @@ export default {
 
 .play_icon {
   font-size: 40px;
+  position: absolute;
+  top: 5px;
 }
 
 .song_name {
@@ -681,17 +683,14 @@ input[type="range"]::-ms-fill-upper {
 
 .mini-leave-to {
   transition: opacity 0.5s, transform 0.5s ease;
-  opacity: 0;
   transform: translateY(100vh);
 }
 @keyframes bounce-in {
   0% {
-    opacity: 0;
     transform: translateY(100vh);
   }
 
   100% {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -704,5 +703,25 @@ input[type="range"]::-ms-fill-upper {
   100% {
     opacity: 0;
   }
+}
+
+@keyframes showIn {
+  0% {
+    opacity: 1;
+    transform: scale(1)
+  }
+
+  100%{
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.change-enter-active{
+  animation: showIn 0.2s reverse;
+}
+
+.change-leave-to{
+  animation: showIn 0.2s;
 }
 </style>
