@@ -202,6 +202,8 @@ export default {
     this.vie = emisora29.radio.programming[4].programs
     this.sab = emisora29.radio.programming[5].programs
     this.dom = emisora29.radio.programming[6].programs
+    this.currentDay = this.lun
+
   },
   methods: {
     playSong(cancion, nombre, autor, id, imagen) {
@@ -252,7 +254,7 @@ export default {
     selectEmisora(id){
       this.$emit('select-emisora', id)
     }
-  },
+  }
 }
 
 </script>

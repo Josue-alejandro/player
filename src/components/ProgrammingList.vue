@@ -15,8 +15,8 @@
                 <li v-for="pro in day" :key="pro.id">
                     <img :src="pro.image" width="60" style="border-radius: 5px;" />
                     <div class="programming_info">
-                        <span style="font-size: 12px; color: grey;">Programas</span>
-                        <span style="font-size: 14px;">{{ pro.title }}</span>
+                        <span style="font-size: 12px; color: grey;">{{ pro.title }}</span>
+                        <span style="font-size: 14px;">{{ pro.locutor }}</span>
                         <span style="font-size: 12px; color: grey;">{{ pro.start_time }} - {{ pro.end_time }}</span>
                     </div>
                 </li>
