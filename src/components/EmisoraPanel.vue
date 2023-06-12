@@ -6,9 +6,10 @@
         <div class="emisoras_container">
             <div class="emisoras_slider" :style="{ 'transform': 'translateX(' + emisorasProgress + '%)' }">
                 <div v-for="emisora in emisoras" :key="emisora.index" class="emisora_img">
-                    <img :src="emisora.image" class="emisoraImg"
-                        :style="{ 'border-radius': '6px', 'transform': this.emisoraSelected === emisora.selectId ? 'scale(1.3)' : 'scale(1)' }"
-                        @click="$emit('select-emisora',emisora.selectId)" />
+                    <img 
+                    :src="emisora.image" class="emisoraImg"
+                    :style="{ 'border-radius': '6px', 'transform': this.emisoraSelected === emisora.selectId ? 'scale(1.6)' : 'scale(1)', 'filter': this.emisoraSelected !== emisora.selectId ? 'grayscale(100%)' : 'grayscale(0%)' }"
+                    @click="$emit('select-emisora',emisora.selectId)" />
                 </div>
             </div>
         </div>
@@ -49,12 +50,16 @@ export default {
 }
 
 .emisoras_container{
-  overflow: hidden;
+  overflow: scroll;
+  display: flex;
+  align-items: center;
+  height: 90px;
+  scrollbar-width: none;
 }
 
 .emisora img {
-  margin: 0.5em;
-  width: 60px;
+  margin: 0.5em 1em;
+  width: 50px;
   transition: transform 0.1s;
 }
 </style>
