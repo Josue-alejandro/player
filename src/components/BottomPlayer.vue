@@ -434,7 +434,7 @@ export default {
 
 .radio_text {
   color: red;
-  font-weight: bold-;
+  font-weight: bold;
 }
 
 .play_icon {

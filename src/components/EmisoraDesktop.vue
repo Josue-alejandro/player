@@ -7,7 +7,7 @@
             <div class="emisoras_slider" :style="{ 'transform': 'translateX(' + emisorasProgress + '%)' }">
                 <div v-for="emisora in emisoras" :key="emisora.index" class="emisora_img">
                     <img :src="emisora.image" class="emisoraImg"
-                        :style="{ 'border-radius': '6px', 'transform': this.emisoraSelected === emisora.selectId ? 'scale(1.3)' : 'scale(1)' }"
+                        :style="{ 'border-radius': '6px', 'transform': this.emisoraSelected === emisora.selectId ? 'scale(1.3)' : 'scale(1)','filter': this.emisoraSelected !== emisora.selectId ? 'grayscale(100%)' : 'grayscale(0%)' }"
                         @click="$emit('select-emisora',emisora.selectId)" />
                 </div>
             </div>

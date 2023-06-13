@@ -6,7 +6,7 @@
           :key="day.index" 
           @click="dayHandler(day)" >
           <p
-          :style="{'background-color': currentDay === day ? 'rgba(78, 6, 6, 0.7)' : 'rgba(0, 0, 0, 0)', 'border-radius': '7px', 'font-size': '12px', 'margin': '0px 20%'}">
+          :style="{'background-color': currentDay === day ? 'rgba(78, 6, 6, 0.7)' : 'rgba(0, 0, 0, 0)', 'border-radius': '7px', 'font-size': '12px', 'margin': '0px 10%'}">
           {{ day.toLocaleUpperCase() }}</p>
           </div>
         </div>
