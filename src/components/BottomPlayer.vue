@@ -1,120 +1,116 @@
 <template>
-    <div>
-        <audio 
-        ref="audioPlayer" 
-        :volume="volume / 100" 
-        @timeupdate="timeUpdate" 
-        :src="songData.currentSong">
-        </audio>
-        <Transition name="slide-fade2">
-          <EmisoraDesktop 
-          @left-handler="leftHandler"
-          @right-handler="rightHandler"
-          @select-emisora="selectEmisora"
-          :emisorasShow="emisorasShow"
-          :emisorasProgress="emisorasProgress"
-          :emisoras="emisoras"
-          :emisoraSelected="emisoraSelected"></EmisoraDesktop>
+  <div>
+    <audio ref="audioPlayer" :volume="volume / 100" @timeupdate="timeUpdate" :src="songData.currentSong">
+    </audio>
+    <Transition name="slide-fade2">
+      <EmisoraDesktop @left-handler="leftHandler" @right-handler="rightHandler" @select-emisora="selectEmisora"
+        :emisorasShow="emisorasShow" :emisorasProgress="emisorasProgress" :emisoras="emisoras"
+        :emisoraSelected="emisoraSelected"></EmisoraDesktop>
+    </Transition>
+    <Transition name="slide-fade2">
+      <div class="slider-container" v-if="volumeShow">
+        <input type="range" min="0" max="100" class="slider" v-model="volume" @input="updateVolume" id="volume-slider">
+      </div>
+    </Transition>
+    <Transition name="slide-fade">
+      <div class="songs_list" v-if="listShow">
+        <ul>
+          <li class="song_in_the_list" v-for="cancion in       canciones      " :key="cancion.id">
+            <div>
+              <img class="list_img" :src="cancion.imagen" :alt="cancion.nombre">
+            </div>
+            <div class="song_info"
+              @click="changeSong(cancion.cancion, cancion.nombre, cancion.autor); songData.id = cancion.id">
+              <p class="grey-text small">{{ cancion.autor }}</p>
+              <p class="" :style=" { color: cancion.id === this.songData.id ? 'red' : 'white' } ">{{ cancion.nombre }}</p>
+              <p class="grey-text tiny">{{ cancion.tiempo }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </Transition>
+    <div class="player_bar" v-if=" minimizedState === true && mobileMode === false ">
+      <div class="play_button" @click=" playHandle ">
+        <Transition name="change">
+          <i class="material-icons play_icon" v-if=" !isPlaying && isLoading === false ">play_arrow</i>
+          <i class="material-icons play_icon" v-else-if=" isPlaying && isLoading === false ">pause</i>
+          <SpinIcon v-else></SpinIcon>
         </Transition>
-        <Transition name="slide-fade2">
-        <div class="slider-container" v-if="volumeShow">
-          <input type="range" min="0" max="100" class="slider" v-model="volume" @input="updateVolume" id="volume-slider">
-        </div>
-        </Transition>
-        <Transition name="slide-fade">
-          <div class="songs_list" v-if="listShow">
-            <ul>
-              <li class="song_in_the_list" v-for="cancion in canciones" :key="cancion.id">
-                <div>
-                  <img class="list_img" :src="cancion.imagen" :alt="cancion.nombre">
-                </div>
-                <div class="song_info" @click="changeSong(cancion.cancion, cancion.nombre, cancion.autor); songData.id = cancion.id">
-                  <p class="grey-text small" >{{ cancion.autor }}</p>
-                  <p class="" :style="{ color: cancion.id === this.songData.id ? 'red' : 'white' }">{{ cancion.nombre }}</p>
-                  <p class="grey-text tiny">{{ cancion.tiempo }}</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </Transition>
-        <div class="player_bar" v-if="minimizedState === true && mobileMode === false">
-            <div class="play_button" @click="playHandle">
-              <Transition name="change">
-                <i class="material-icons play_icon" v-if="!isPlaying && isLoading === false">play_arrow</i>
-                <i class="material-icons play_icon" v-else-if="isPlaying && isLoading === false">pause</i>
-                <SpinIcon v-else></SpinIcon>
-              </Transition>
-            </div>
-            <div class="song_name">
-                <span class="radio_text">
-                  IRADIODEMO
-                </span>
-                <span >
-                    {{ songData.currentAuthor }} - {{ songData.currentSongName }}
-                </span>
-            </div>
-            <div class="icons_div">
-                <i class="material-icons icons_m" @click="previousSong()">skip_previous</i>
-            </div>
-            <div class="icons_div">
-                <i class="material-icons icons_m" @click="nextSong()">skip_next</i>
-            </div>
-            <div class="icons_div side_border" @click="emisorasShow = !emisorasShow">
-                <i class="material-icons icons_m">radio</i>
-            </div>
-            <div class="song_duration">
-                <span>{{ formattedDuration }}</span>
-            </div>
-            <div class="progress_bar">
-              <input v-model="currentTime" type="range" id="progress-bar" min="0" :max="duration" @input="updateCurrentTime" />
-            </div>
-            <div class="icons_div">
-                <i class="material-icons icons_m" @click="listShow = !listShow">playlist_play</i>
-            </div>
-            <div class="icons_div">
-                <i class="material-icons icons_m" @click="volumeShow = !volumeShow">volume_up</i>
-            </div>
-            <div class="icons_div">
-                <i class="material-icons icons_m" 
-                @click="minimizedState = false; listShow = false; volumeShow = false; emisorasShow = false">open_in_new</i>
-            </div>
-        </div>
-        <Transition name="mini">
-        <MobilePlayer
-        v-if="minimizedState === false"
-        class="mobile_bar" 
-        :mobileMode="mobileMode"
-        :canciones="canciones" 
-        :songData="songData" 
-        :duration="duration"
-        :formattedDuration="formattedDuration"
-        :isPlaying="isPlaying"
-        :barTime="currentTime"
-        :volumen="volume"
-        :emisorasShow="emisorasShow"
-        :emisorasProgress="emisorasProgress"
-        :emisoras="emisoras"
-        :emisoraSelected="emisoraSelected"
-        @update-volumen="updateMobileVolume"
-        :updatebar="updateCurrentTime"
-        @active-song="changeSongMobile"
-        @play-song="playHandle"
-        @next-song="nextSong()"
-        @previous-song="previousSong()"
-        @left-handler="leftHandler"
-        @right-handler="rightHandler"
-        @emisora-on="emisorasShow = true"
-        @select-emisora="selectEmisora"
-        @un-minimized="unMinimized"
-        ></MobilePlayer>
-        </Transition>
+      </div>
+      <div class="song_name">
+        <span class="radio_text">
+          IRADIODEMO
+        </span>
+        <span style="width: 500px; text-align: left;" class="nameMotion">
+          {{ songData.currentAuthor }} - {{ songData.currentSongName }}
+        </span>
+      </div>
+      <div style="height: 50px;">
+        <img :src="songData.imagen" width="50">
+      </div>
+      <div class="icons_div">
+        <i class="material-icons icons_m" @click=" previousSong() ">skip_previous</i>
+      </div>
+      <div class="icons_div">
+        <i class="material-icons icons_m" @click=" nextSong() ">skip_next</i>
+      </div>
+      <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow ">
+        <i class="material-icons icons_m">radio</i>
+      </div>
+      <div class="song_duration">
+        <span>{{ formattedDuration }}</span>
+      </div>
+      <div class="progress_bar">
+        <input v-model=" currentTime " type="range" id="progress-bar" min="0" :max=" duration "
+          @input=" updateCurrentTime " />
+      </div>
+      <div class="icons_div">
+        <i class="material-icons icons_m" @click=" listShow = !listShow ">playlist_play</i>
+      </div>
+      <div class="icons_div">
+        <i class="material-icons icons_m" @click=" volumeShow = !volumeShow ">volume_up</i>
+      </div>
+      <div class="icons_div">
+        <i class="material-icons icons_m"
+          @click="openNewWindow">open_in_new</i>
+      </div>
     </div>
+    <Transition name="mini">
+      <MobilePlayer 
+      v-if=" minimizedState === false " 
+      class="mobile_bar" 
+      :playerMode="playerMode"
+      :mobileMode=" mobileMode "
+      :programming=" programming "
+      :canciones=" canciones " 
+      :songData=" songData " 
+      :duration=" duration " 
+      :formattedDuration=" formattedDuration "
+      :isPlaying=" isPlaying " 
+      :isLoading=" isLoading "
+      :barTime=" currentTime " 
+      :volumen=" volume " 
+      :emisorasShow=" emisorasShow "
+      :emisorasProgress=" emisorasProgress " 
+      :emisoras=" emisoras " 
+      :emisoraSelected=" emisoraSelected "
+      @update-volumen=" updateMobileVolume " 
+      :updatebar=" updateCurrentTime " 
+      @active-song=" changeSongMobile "
+      @play-song=" playHandle " 
+      @next-song=" nextSong() " 
+      @previous-song=" previousSong() "
+      @left-handler=" leftHandler " 
+      @right-handler=" rightHandler " 
+      @emisora-on=" emisorasShow = true "
+      @select-emisora=" selectEmisora " 
+      @un-minimized=" unMinimized "></MobilePlayer>
+    </Transition>
+  </div>
 </template>
 
 <script>
 import InMyBlood from '../songs/son1.mp3';
-import theSearch from '../songs/son2.mp3';
-import Lost from '../songs/son3.mp3';
 import EmisoraDesktop from './EmisoraDesktop.vue';
 import SpinIcon from './SpinIcon.vue'
 
@@ -127,11 +123,29 @@ function formatDuration(durationInSeconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 
+const obtenerDatos = async (parametro) => {
+   try {
+     const response = await fetch('http://localhost:3000/datos/' + parametro);
+     if (response.ok) {
+       const datosObtenidos = await response.json();
+       return datosObtenidos;
+     } else {
+       throw new Error('Error al obtener los datos.');
+     }
+   } catch (error) {
+     console.error(error);
+     throw error;
+   }
+ };
+
+
 import MobilePlayer from './MobilePlayer.vue';
 
 export default {
+  props: ['playerMode'],
   data() {
     return {
+      mode: 1,
       mobileMode: false,
       minimizedState: true,
       isPlaying: false,
@@ -146,39 +160,8 @@ export default {
       emisoraSelected: null,
       emisorasProgress: 0,
       emisorasShow: false,
-      emisoras:[{
-        image:'https://upload.wikimedia.org/wikipedia/en/2/20/Dua_Lipa_%28album%29.png',
-        selectId: 1
-      },
-      {
-        image:'https://upload.wikimedia.org/wikipedia/en/4/45/Divide_cover.png',
-        selectId: 2
-      },
-      {
-        image:'https://images.genius.com/335f5ba66a18c452f5f3fccf44021fac.1000x1000x1.jpg',
-        selectId: 3
-      },
-      {
-        image:'https://www.thebackstage.net/wp-content/uploads/2013/03/bringmethehorizon_s.jpg',
-        selectId: 4
-      },
-      {
-        image:'https://upload.wikimedia.org/wikipedia/en/2/20/Dua_Lipa_%28album%29.png',
-        selectId: 5
-      },
-      {
-        image:'https://upload.wikimedia.org/wikipedia/en/4/45/Divide_cover.png',
-        selectId: 6
-      },
-      {
-        image:'https://images.genius.com/335f5ba66a18c452f5f3fccf44021fac.1000x1000x1.jpg',
-        selectId: 7
-      },
-      {
-        image:'https://www.thebackstage.net/wp-content/uploads/2013/03/bringmethehorizon_s.jpg',
-        selectId: 8
-      }
-      ],
+      emisoras: [],
+      programming: [],
       songData: {
         currentSong: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
         currentAuthor: 'Kalimba',
@@ -195,81 +178,23 @@ export default {
           cancion: InMyBlood,
           imagen: 'https://i1.sndcdn.com/artworks-000331552113-31yptw-t500x500.jpg'
         },
-        {
-          id: 3,
-          nombre: 'NF',
-          autor: 'The Search',
-          tiempo: '4:12',
-          cancion: theSearch,
-          imagen: 'https://upload.wikimedia.org/wikipedia/en/1/1b/NF_-_The_Search.png'
-        },
-        {
-          id: 4,
-          nombre: 'LosT',
-          autor: 'Bring Me the Horizon',
-          tiempo: '4:12',
-          cancion: Lost,
-          imagen: 'https://i.scdn.co/image/ab67616d0000b273068b7b754072969555a095f5'
-        },
-        {
-          id: 5,
-          nombre: 'FM Vos 95.5',
-          autor: 'Autor 5',
-          tiempo: '4:12',
-          cancion: 'https://cdn.instream.audio/:9081/stream',
-          imagen: 'https://panel.instream.audio/storage.io/object/system-3H2Tx4521355422C30B3FF4A94ADF202A1186/logo-urbana.jpg'
-        },
-        {
-          id: 6,
-          nombre: 'Villareal',
-          autor: 'Autor 6',
-          tiempo: '4:12',
-          cancion: 'https://cdn.instream.audio/:9060/stream',
-          imagen: 'https://panel.instream.audio/storage.io/object/system-3H2Tx4521355422C30B3FF4A94ADF202A1186/logo-urbana.jpg'
-        },
-        {
-          id: 7,
-          nombre: 'Radio Vision',
-          autor: 'Autor 7',
-          tiempo: '4:12',
-          cancion: 'https://cdn.instream.audio/:9061/stream',
-          imagen: 'https://panel.instream.audio/storage.io/object/system-3H2Tx4521355422C30B3FF4A94ADF202A1186/logo-urbana.jpg'
-
-        },
-        {
-          id: 8,
-          nombre: 'FM del Lago',
-          autor: 'Autor 8',
-          tiempo: '4:12',
-          cancion: 'https://cdn.instream.audio/:9180/stream',
-          imagen: 'https://panel.instream.audio/storage.io/object/system-3H2Tx4521355422C30B3FF4A94ADF202A1186/logo-urbana.jpg'
-        },
-        {
-          id: 9,
-          nombre: 'FM la Rocka',
-          autor: 'Autor 8',
-          tiempo: '4:12',
-          cancion: 'https://cdn.instream.audio/:8137/stream',
-          imagen: 'https://i1.sndcdn.com/artworks-000037594427-ztal2r-t500x500.jpg'
-        },
-        // Agrega más objetos de canciones según sea necesario
       ]
     };
   },
-  components:{
+  components: {
     MobilePlayer,
     EmisoraDesktop,
     SpinIcon
   },
   methods: {
-    rightHandler(){
-      if(this.emisorasProgress > -100){
-        this.emisorasProgress = this.emisorasProgress - 30
+    rightHandler() {
+      if (this.emisorasProgress > -90) {
+        this.emisorasProgress = this.emisorasProgress - 10
       }
     },
-    leftHandler(){
-      if(this.emisorasProgress  < 0){
-        this.emisorasProgress = this.emisorasProgress + 30
+    leftHandler() {
+      if (this.emisorasProgress < 0) {
+        this.emisorasProgress = this.emisorasProgress + 10
       }
     },
     playHandle() {
@@ -281,16 +206,16 @@ export default {
       }
       this.isPlaying = !this.isPlaying;
     },
-    changeSongMobile(data){
-      this.changeSong(data.cancion, data.nombre, data.autor); 
+    changeSongMobile(data) {
+      this.changeSong(data.cancion, data.nombre, data.autor);
       this.songData.id = data.id,
-      this.songData.imagen = data.imagen
+        this.songData.imagen = data.imagen
     },
     updateVolume() {
       const audio = this.$refs.audioPlayer;
       audio.volume = this.volume / 100;
     },
-    updateMobileVolume(volumen){
+    updateMobileVolume(volumen) {
       this.volume = volumen
       this.updateVolume();
       console.log(this.volume)
@@ -304,13 +229,13 @@ export default {
       this.currentTime = parseFloat(event.target.value);
       audio.currentTime = this.currentTime;
     },
-    timeUpdate(event){
+    timeUpdate(event) {
       const audio = event.target;
       const totalSeconds = Math.round(audio.currentTime);
       this.duration = audio.duration
       this.formattedDuration = formatDuration(totalSeconds);
     },
-    changeSong(song, name, author, imagen) { 
+    changeSong(song, name, author, imagen) {
       this.isLoading = true
       this.songData.currentAuthor = author;
       this.songData.currentSongName = name;
@@ -325,10 +250,17 @@ export default {
         this.isLoading = false;
       });
     },
-    nextSong(){
+    openNewWindow(){
+      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
+      var opciones = "width=900,height=400,scrollbars=yes";
+
+      // Abrir ventana emergente
+      window.open(url, "_blank", opciones);
+    },
+    nextSong() {
       const currentIndex = this.canciones.findIndex(cancion => cancion.id === this.songData.id);
       const siguienteIndex = currentIndex + 1;
-      
+
       if (siguienteIndex < this.canciones.length) {
         const siguienteCancion = this.canciones[siguienteIndex];
         console.log(siguienteCancion)
@@ -343,10 +275,10 @@ export default {
         this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
       }
     },
-    previousSong(){
+    previousSong() {
       const currentIndex = this.canciones.findIndex(cancion => cancion.id === this.songData.id);
       const siguienteIndex = currentIndex - 1;
-      
+
       if (siguienteIndex < this.canciones.length) {
         const siguienteCancion = this.canciones[siguienteIndex];
         console.log(siguienteCancion)
@@ -361,18 +293,79 @@ export default {
         this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
       }
     },
-    unMinimized(){
+    unMinimized() {
       this.minimizedState = true
     },
-    selectEmisora(id){
+    selectEmisora(id) {
       this.emisoraSelected = id
+      //buscar emisora seleccionada
+      const emisoraEncontrada = this.emisoras.find(val => val.selectId == id)
+      this.canciones = []
+      this.programming = emisoraEncontrada.programming
+      emisoraEncontrada.audio.forEach((val, index) => {
+        this.canciones.push({
+          id: index,
+          nombre: emisoraEncontrada.song_name,
+          autor: emisoraEncontrada.artist_name,
+          cancion: val.url,
+          imagen: emisoraEncontrada.image
+        })
+      });
+      this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
     }
   },
   async mounted() {
-    if(window.screen.width < 750){
+    this.mode = this.playerMode > 0 ? 1 : 0
+    this.minimizedState = this.mode === 1 ? false : true
+    if (window.screen.width < 750) {
       this.mobileMode = true
-      this.minimizedState = false
     }
+
+     const obtenerDatosLoop = async () => {
+       let respuestas = 0;
+       let nulos = 0;
+
+       for (let parametro = 1; parametro <= 100; parametro++) {
+         try {
+           const datosObtenidos = await obtenerDatos(parametro);
+           if (datosObtenidos) {
+             if (datosObtenidos.radio.logo == "") {
+               const emisora = {
+                 image: 'https://img.freepik.com/premium-vector/online-radio-station-vintage-icon-symbol_8071-25787.jpg',
+                 selectId: datosObtenidos.id,
+                 audio: datosObtenidos.radio.audio,
+                 artist_name: datosObtenidos.radio.name,
+                 song_name: datosObtenidos.cid,
+                 programming: datosObtenidos.radio.programming
+               }
+               this.emisoras.push(emisora)
+             } else {
+               const emisora = {
+                 image: datosObtenidos.radio.logo,
+                 selectId: datosObtenidos.id,
+                 audio: datosObtenidos.radio.audio,
+                 artist_name: datosObtenidos.radio.defaults.artist_name,
+                 song_name: datosObtenidos.radio.defaults.song_name,
+                 programming: datosObtenidos.radio.programming
+               }
+               this.emisoras.push(emisora)
+             }
+             respuestas++
+           } else {
+             nulos++
+           }
+         } catch (error) {
+           nulos++;
+         }
+       }
+
+       console.log(`Total de respuestas positivas: ${respuestas}`);
+       console.log(`Total de respuestas nulas: ${nulos}`);
+       console.log(this.emisoras)
+     }
+
+     obtenerDatosLoop();
+
 
     this.songData.currentSong = this.canciones[0].cancion
     this.songData.imagen = this.canciones[0].imagen
@@ -380,6 +373,7 @@ export default {
     this.songData.currentAuthor = this.canciones[0].autor
     this.songData.currentSongName = this.canciones[0].nombre
     const audio = this.$refs.audioPlayer;
+
 
     audio.addEventListener('loadedmetadata', () => {
       const totalSeconds = Math.round(audio.duration);
@@ -394,40 +388,40 @@ export default {
 </script>
 
 <style scoped>
-.player_bar{
-    background-color: black;
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+.player_bar {
+  background-color: black;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .play_button {
-    color: white;
-    font-size: 17px;
-    width: 70px;
-    border-right: 1px solid rgba(100, 100, 100, 0.3);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    cursor: pointer;
+  color: white;
+  font-size: 17px;
+  width: 70px;
+  border-right: 1px solid rgba(100, 100, 100, 0.3);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.side_border{
+.side_border {
   border-right: 1px solid rgba(100, 100, 100, 0.3);
 }
 
 .icons_div {
-    color: white;
-    width: 27px;
-    padding-top: 0.5em;
+  color: white;
+  width: 27px;
+  padding-top: 0.5em;
 }
 
-.icons_m{
+.icons_m {
   font-size: 17px;
   cursor: pointer
 }
@@ -444,38 +438,60 @@ export default {
 }
 
 .song_name {
-    color: rgba(200, 200, 200, 0.6);
-    width: 200px;
-    align-items: center;
-    font-size: 12px;
-    padding: 0px 20px 0px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    overflow: hidden;
+  color: rgba(200, 200, 200, 0.6);
+  width: 200px;
+  align-items: center;
+  font-size: 12px;
+  padding: 0px 20px 0px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  overflow: hidden;
 }
 
-.song_duration{
-    font-size: 12px;
-    color: rgba(200, 200, 200, 0.6);
+.nameMotion{
+  animation: read-text 15s infinite;
 }
 
-.red_square{
-    margin-left: 20px;
-    width: 70px;
-    background-color: red;
+@keyframes read-text {
+  0%{
+    transform: translateX(0%);
+  }
+
+  50%{
+    transform: translateX(-70%);
+  }
+
+  50.001%{
+    transform: translateX(70%);
+  }
+
+  100%{
+    transform: translateX(0%)
+  }
+}
+
+.song_duration {
+  font-size: 12px;
+  color: rgba(200, 200, 200, 0.6);
+}
+
+.red_square {
+  margin-left: 20px;
+  width: 70px;
+  background-color: red;
 }
 
 .progress_bar {
-    width: 40%;
-    padding: 0px 0px 0px 10px;
+  width: 40%;
+  padding: 0px 0px 0px 10px;
 }
 
 .volumen_container {
   background-color: black;
   padding: 1em;
-   /* Posiciona el control deslizante en el centro vertical del contenedor */
-   position: absolute;
+  /* Posiciona el control deslizante en el centro vertical del contenedor */
+  position: absolute;
   top: 0;
   left: 50%;
   width: 20px;
@@ -488,7 +504,7 @@ export default {
   border-radius: 5px;
 }
 
-.songs_list{
+.songs_list {
   background-color: black;
   border-radius: 10px;
   color: white;
@@ -502,7 +518,7 @@ export default {
   right: 100px;
 }
 
-.song_info{
+.song_info {
   margin-left: 20px;
   text-align: left;
 }
@@ -587,17 +603,16 @@ input[type="range"]::-ms-fill-upper {
     display: none;
   }
 
-  body{
+  body {
     background-image: url('https://images.unsplash.com/photo-1576249435502-2ee2b5064a63?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDIwfHx8ZW58MHx8fHw%3D&w=1000&q=80https://i0.hippopx.com/photos/144/586/492/people-crowd-party-spectators-preview.jpg');
   }
 
-  .songs_list{
+  .songs_list {
     width: 100%;
   }
 }
 
-@media (min-width: 770px) {
-}
+@media (min-width: 770px) {}
 
 /*
   Enter and leave animations can use different
@@ -675,16 +690,15 @@ input[type="range"]::-ms-fill-upper {
 }
 
 
-.mini-enter-active
- {
+.mini-enter-active {
   animation: bounce-in 0.5s
-
 }
 
 .mini-leave-to {
   transition: opacity 0.5s, transform 0.5s ease;
   transform: translateY(100vh);
 }
+
 @keyframes bounce-in {
   0% {
     transform: translateY(100vh);
@@ -711,17 +725,17 @@ input[type="range"]::-ms-fill-upper {
     transform: scale(1)
   }
 
-  100%{
+  100% {
     opacity: 0;
     transform: scale(0);
   }
 }
 
-.change-enter-active{
+.change-enter-active {
   animation: showIn 0.2s reverse;
 }
 
-.change-leave-to{
+.change-leave-to {
   animation: showIn 0.2s;
 }
 </style>

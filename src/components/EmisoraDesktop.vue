@@ -55,4 +55,9 @@ export default {
   width: 40px;
   transition: transform 0.1s;
 }
+
+.emisora_img {
+  display: flex;
+  align-items: center;
+}
 </style>

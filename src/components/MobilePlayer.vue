@@ -1,12 +1,12 @@
 <template>
   <div class="player" :style="{
     background: minimized === false ? 'black' : 'rgba(0,0,0,0)',
-    height: minimized === true ? '15vh' : '100vh'
+    height: minimized === true ? '130px' : '100vh'
   }">
-    <div class="minimized" 
-    :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.5)), url(' + songData.imagen + ')'}" 
-    v-if="minimized">
-      <div class="" @click="minimized = false">
+    <div class="minimized"
+      :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.5)), url(' + songData.imagen + ')' }"
+      v-if="minimized">
+      <div class="" @click="openMinimizedWindow">
         <i class="material-icons icons_m">open_in_new</i>
       </div>
       <div class="info_top">
@@ -19,6 +19,7 @@
         <div class="play_button" @click="$emit('playSong')">
           <i class="material-icons play_icon" v-if="!isPlaying">play_arrow</i>
           <i class="material-icons play_icon" v-else>pause</i>
+
         </div>
       </div>
     </div>
@@ -32,7 +33,7 @@
         </Transition>
         <div>
           <div class="top_bar">
-            <div class="icons_top" @click="minizeWindow">
+            <div class="icons_top" @click="openNewWindow">
               <i class="material-icons icons_m">open_in_new</i>
             </div>
             <div class="icons_top" @click="playlistActive = !playlistActive">
@@ -53,12 +54,12 @@
         </div>
         <div class="emisora">
           <EmisoraPanel 
-          @left-handler="$emit('left-handler')"
+          @left-handler="$emit('left-handler')" 
           @right-handler="$emit('right-handler')"
-          @select-emisora="selectEmisora"
-          :emisorasShow="emisorasShow"
+          @select-emisora="selectEmisora" 
+          :emisorasShow="emisorasShow" 
           :emisorasProgress="emisorasProgress"
-          :emisoras="emisoras"
+          :emisoras="emisoras" 
           :emisoraSelected="emisoraSelected"></EmisoraPanel>
         </div>
         <div class="player_bar">
@@ -70,8 +71,9 @@
               <i class="material-icons icons_m" @click="$emit('previous-song')">skip_previous</i>
             </div>
             <div class="play_button" @click="$emit('playSong')" style="background-color: rgba(0, 0, 0, 0);">
-              <i class="material-icons play_icon" v-if="!isPlaying">play_arrow</i>
-              <i class="material-icons play_icon" v-else>pause</i>
+              <i class="material-icons play_icon" v-if=" !isPlaying && isLoading === false ">play_arrow</i>
+              <i class="material-icons play_icon" v-else-if=" isPlaying && isLoading === false ">pause</i>
+              <SpinIcon v-else></SpinIcon>
             </div>
             <div class="icons_div">
               <i class="material-icons icons_m" @click="$emit('next-song')">skip_next</i>
@@ -85,9 +87,8 @@
           <div class="songs_list" :style="{ bottom: playlistActive === true ? '0%' : '-100%' }">
             <div class="playlist_nav">
               <div @click="playlistActive = !playlistActive">
-                <i 
-                class="material-icons icons_m"
-                style="border: 1px solid white; padding: 3px; border-radius: 100%; margin-top: 10px;">close</i>
+                <i class="material-icons icons_m"
+                  style="border: 1px solid white; padding: 3px; border-radius: 100%; margin-top: 10px;">close</i>
               </div>
               <div class="playlist_options">
 
@@ -109,12 +110,10 @@
               </div>
             </div>
             <div class="menu" :style="{ transform: optionActive === 0 ? 'translateX(0px)' : 'translateX(-100vw)' }">
-              <PlayList 
-              @play-song="playSong" 
-              :canciones="canciones" 
-              :songData="songData"></PlayList>
-              <ProgrammingList  
+              <PlayList @play-song="playSong" :canciones="canciones" :songData="songData"></PlayList>
+              <ProgrammingList 
               :day="currentDay"
+              :programmingShow="programmingShow" 
               @change-day="dayHandler"></ProgrammingList>
             </div>
           </div>
@@ -128,7 +127,7 @@
 import PlayList from './PlayList.vue';
 import ProgrammingList from './ProgrammingList.vue';
 import EmisoraPanel from './EmisoraPanel.vue';
-import emisora29 from '../json/29.json' 
+import SpinIcon from './SpinIcon.vue';
 
 export default {
   data() {
@@ -139,6 +138,7 @@ export default {
       volumenUp: false,
       minimized: false,
       emisorasShow: false,
+      programmingShow: false,
       currentDay: {},
       lun: null,
       mar: null,
@@ -150,6 +150,12 @@ export default {
     }
   },
   props: {
+    isLoading:{
+      required: true
+    },
+    playerMode:{
+      required: true
+    },
     mobileMode: {
       required: true
     },
@@ -184,25 +190,37 @@ export default {
     },
     emisoraSelected: {
       required: true
+    },
+    programming: {
+      required: true
+    }
+  },
+  watch:{
+    programming:{
+      immediate: true,
+      handler(newData, oldData){
+        console.log(newData),
+        console.log(oldData)
+        this.updateProgramming()
+      }
     }
   },
   components: {
     PlayList,
     ProgrammingList,
-    EmisoraPanel
-},
+    EmisoraPanel,
+    SpinIcon
+  },
   mounted() {
-    if(window.screen.width < 750){
+    if(this.playerMode == 2){
+      this.minimized = true
+    }
+    if (window.screen.width < 750) {
       this.minimized = true;
     }
-    this.lun = emisora29.radio.programming[0].programs
-    this.mar = emisora29.radio.programming[1].programs
-    this.mier = emisora29.radio.programming[2].programs
-    this.jue = emisora29.radio.programming[3].programs
-    this.vie = emisora29.radio.programming[4].programs
-    this.sab = emisora29.radio.programming[5].programs
-    this.dom = emisora29.radio.programming[6].programs
-    this.currentDay = this.lun
+    console.log()
+    this.updateProgramming()
+
 
   },
   methods: {
@@ -216,6 +234,20 @@ export default {
       }
       this.$emit('activeSong', data);
     },
+    openNewWindow(){
+      var url = "/ruta2"; // Ruta a tu componente de ventana emergente
+      var opciones = "width=500,height=700,scrollbars=yes";
+
+      // Abrir ventana emergente
+      window.open(url, "_blank", opciones);
+    },
+    openMinimizedWindow(){
+      var url = "/ruta3"; // Ruta a tu componente de ventana emergente
+      var opciones = "width=500,height=130,scrollbars=yes";
+
+      // Abrir ventana emergente
+      window.open(url, "_blank", opciones);
+    },
     playAnimation() {
       const image = this.$refs.image;
       image.classList.remove('fade-slide'); // Elimina la clase de animación
@@ -227,32 +259,48 @@ export default {
       this.currentTime = parseFloat(event.target.value);
       audio.currentTime = this.currentTime;
     },
-    minizeWindow(){
-      if(this.mobileMode === true){
+    minizeWindow() {
+      if (this.mobileMode === true) {
         this.minimized = true
-      }else{
+      } else {
         this.$emit('un-minimized')
       }
     },
-    dayHandler(day){
-      if(day == 'lun'){
+    dayHandler(day) {
+      if (day == 'lun') {
         this.currentDay = this.lun
-      }else if(day == 'mar'){
+      } else if (day == 'mar') {
         this.currentDay = this.mar
-      }else if(day == 'mier'){
+      } else if (day == 'mier') {
         this.currentDay = this.mier
-      }else if(day == 'jue'){
+      } else if (day == 'jue') {
         this.currentDay = this.jue
-      }else if(day == 'vie'){
+      } else if (day == 'vie') {
         this.currentDay = this.vie
-      }else if(day == 'sab'){
+      } else if (day == 'sab') {
         this.currentDay = this.sab
-      }else if(day == 'dom'){
+      } else if (day == 'dom') {
         this.currentDay = this.dom
       }
     },
-    selectEmisora(id){
+    selectEmisora(id) {
       this.$emit('select-emisora', id)
+      this.updateProgramming()
+    },
+    updateProgramming() {
+      const days = ['lun', 'mar', 'mier', 'jue', 'vie', 'sab', 'dom'];
+
+      for (let i = 0; i < days.length; i++) {
+        const day = days[i];
+        if (this.programming[i]) {
+          this[day] = this.programming[i].programs;
+        } else {
+          this[day] = [];
+        }
+      }
+
+      this.currentDay = this.lun;
+      this.programmingShow = Boolean(this.programming[0]);
     }
   }
 }
@@ -275,7 +323,7 @@ body {
   width: 60%;
 }
 
-.info_top{
+.info_top {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -610,4 +658,5 @@ input[type="range"]::-ms-fill-upper {
   100% {
     opacity: 1;
   }
-}</style>
+}
+</style>

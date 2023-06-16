@@ -11,7 +11,7 @@
           </div>
         </div>
         <div>
-            <ul class="radio_list">
+            <ul class="radio_list" v-if="programmingShow">
                 <li v-for="pro in day" :key="pro.id">
                     <img :src="pro.image" width="60" style="border-radius: 5px;" />
                     <div class="programming_info">
@@ -21,6 +21,9 @@
                     </div>
                 </li>
             </ul>
+            <div v-else>
+              <h3 style="color: white; font-size: 18px;">Programacion no disponible</h3>
+            </div>
         </div>
     </div>
 </template>
@@ -33,7 +36,7 @@ export default {
             days:['lun', 'mar', 'mier', 'jue', 'vie', 'sab', 'dom']
         }
     },
-    props:['day'],
+    props:['day', 'programmingShow'],
     methods:{
         dayHandler(day){
             this.currentDay = day

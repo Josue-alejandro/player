@@ -1,14 +1,13 @@
 <template>
-  <BottomPlayer></BottomPlayer>
+  <router-view></router-view>
 </template>
 
 <script>
-import BottomPlayer from './components/BottomPlayer.vue';
 
 export default {
   name: 'App',
-  components: {
-    BottomPlayer
+  mounted(){
+    console.log(this.$route.params)
   }
 }
 </script>
