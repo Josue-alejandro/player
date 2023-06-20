@@ -7,7 +7,7 @@ import BottomPlayer from './components/BottomPlayer.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/ruta1', component: BottomPlayer, props: { playerMode: 0 } },
+    { path: '/', component: BottomPlayer, props: { playerMode: 0 } },
     { path: '/ruta2', component: BottomPlayer, props: { playerMode: 1 } },
     { path: '/ruta3', component: BottomPlayer, props: { playerMode: 2 } }
   ]

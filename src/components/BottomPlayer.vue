@@ -9,13 +9,13 @@
     </Transition>
     <Transition name="slide-fade2">
       <div class="slider-container" v-if="volumeShow">
-        <input type="range" min="0" max="100" class="slider" v-model="volume" @input="updateVolume" id="volume-slider">
+        <input type="range" min="0" max="100" v-model="volume" @input="updateVolume">
       </div>
     </Transition>
     <Transition name="slide-fade">
       <div class="songs_list" v-if="listShow">
         <ul>
-          <li class="song_in_the_list" v-for="cancion in       canciones      " :key="cancion.id">
+          <li class="song_in_the_list" v-for="cancion in canciones" :key="cancion.id">
             <div>
               <img class="list_img" :src="cancion.imagen" :alt="cancion.nombre">
             </div>
@@ -45,34 +45,40 @@
           {{ songData.currentAuthor }} - {{ songData.currentSongName }}
         </span>
       </div>
-      <div style="height: 50px;">
+      <div style="height: 50px;" class="desktop_widget">
         <img :src="songData.imagen" width="50">
       </div>
-      <div class="icons_div">
+      <div class="icons_div desktop_widget" >
         <i class="material-icons icons_m" @click=" previousSong() ">skip_previous</i>
       </div>
-      <div class="icons_div">
+      <div class="icons_div desktop_widget">
         <i class="material-icons icons_m" @click=" nextSong() ">skip_next</i>
       </div>
-      <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow ">
+      <div class="icons_div side_border desktop_widget" @click=" emisorasShow = !emisorasShow ">
         <i class="material-icons icons_m">radio</i>
       </div>
-      <div class="song_duration">
+      <div class="song_duration desktop_widget">
         <span>{{ formattedDuration }}</span>
       </div>
-      <div class="progress_bar">
+      <div class="progress_bar desktop_widget">
         <input v-model=" currentTime " type="range" id="progress-bar" min="0" :max=" duration "
           @input=" updateCurrentTime " />
       </div>
-      <div class="icons_div">
+      <div class="icons_div desktop_widget">
         <i class="material-icons icons_m" @click=" listShow = !listShow ">playlist_play</i>
       </div>
-      <div class="icons_div">
+      <div class="icons_div desktop_widget">
         <i class="material-icons icons_m" @click=" volumeShow = !volumeShow ">volume_up</i>
       </div>
-      <div class="icons_div">
+      <div class="icons_div desktop_widget">
         <i class="material-icons icons_m"
           @click="openNewWindow">open_in_new</i>
+      </div>
+      <div class="icons_div mobile_widget">
+        <i class="material-icons icons_m" style="font-size: 26px;"
+           @click="minimizedState = false">
+          chevron_right
+        </i>
       </div>
     </div>
     <Transition name="mini">
@@ -251,8 +257,8 @@ export default {
       });
     },
     openNewWindow(){
-      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=900,height=400,scrollbars=yes";
+      var url = "/ruta2"; // Ruta a tu componente de ventana emergente
+      var opciones = "width=300,height=540,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
@@ -317,9 +323,6 @@ export default {
   async mounted() {
     this.mode = this.playerMode > 0 ? 1 : 0
     this.minimizedState = this.mode === 1 ? false : true
-    if (window.screen.width < 750) {
-      this.mobileMode = true
-    }
 
      const obtenerDatosLoop = async () => {
        let respuestas = 0;
@@ -398,6 +401,24 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.mobile_widget{
+  display: none;
+}
+
+@media (max-width: 930px) {
+  .desktop_widget{
+    display: none;
+  }
+  
+  .mobile_widget{
+    display: block;
+  }
+
+  .song_name{
+    width: 400px;
+  }
 }
 
 .play_button {
@@ -531,7 +552,7 @@ export default {
   cursor: pointer;
 }
 
-input[type="range"] {
+#progress-bar {
   -webkit-appearance: none;
   width: 100%;
   height: 3px;
@@ -539,13 +560,13 @@ input[type="range"] {
   outline: none;
 }
 
-input[type="range"]::-webkit-slider-runnable-track {
+#progress-bar::-webkit-slider-runnable-track {
   width: 100%;
   height: 2px;
   background-color: #fff;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+#progress-bar::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 0;
@@ -554,20 +575,20 @@ input[type="range"]::-webkit-slider-thumb {
   background-color: transparent;
 }
 
-input[type="range"]::-moz-range-track {
+#progress-bar::-moz-range-track {
   width: 100%;
   height: 2px;
   background-color: #fff;
 }
 
-input[type="range"]::-moz-range-thumb {
+#progress-bar::-moz-range-thumb {
   width: 0;
   height: 0;
   border: none;
   background-color: transparent;
 }
 
-input[type="range"]::-ms-track {
+#progress-bar::-ms-track {
   width: 100%;
   height: 2px;
   background-color: #fff;
@@ -575,26 +596,26 @@ input[type="range"]::-ms-track {
   color: transparent;
 }
 
-input[type="range"]::-ms-thumb {
+#progress-bar::-ms-thumb {
   width: 0;
   height: 0;
   border: none;
   background-color: transparent;
 }
 
-input[type="range"]::-ms-fill-lower {
+#progress-bar::-ms-fill-lower {
   background-color: #ffbb00;
 }
 
-input[type="range"]::-moz-range-progress {
+#progress-bar::-moz-range-progress {
   background-color: #ffbb00;
 }
 
-input[type="range"]::-webkit-progress-value {
+#progress-bar::-webkit-progress-value {
   background-color: #ffbb00;
 }
 
-input[type="range"]::-ms-fill-upper {
+#progress-bar::-ms-fill-upper {
   background-color: #fff;
 }
 
@@ -696,16 +717,16 @@ input[type="range"]::-ms-fill-upper {
 
 .mini-leave-to {
   transition: opacity 0.5s, transform 0.5s ease;
-  transform: translateY(100vh);
+  transform: translateX(100vh);
 }
 
 @keyframes bounce-in {
   0% {
-    transform: translateY(100vh);
+    transform: translateX(100vh);
   }
 
   100% {
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
@@ -738,4 +759,143 @@ input[type="range"]::-ms-fill-upper {
 .change-leave-to {
   animation: showIn 0.2s;
 }
+
+.slider_volumen {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background: black; /* Fondo negro */
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.slider_volumen::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: white; /* Thumb blanco */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider_volumen::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: white; /* Thumb blanco */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider_volumen::-ms-thumb {
+  width: 25px;
+  height: 25px;
+  background: white; /* Thumb blanco */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider_volumen::-webkit-slider-runnable-track {
+  height: 10px;
+  background: yellow; /* Progreso amarillo */
+}
+
+.slider_volumen::-moz-range-track {
+  height: 10px;
+  background: yellow; /* Progreso amarillo */
+}
+
+.slider_volumen::-ms-fill-lower {
+  background: yellow; /* Progreso amarillo */
+}
+
+.slider_volumen::-webkit-slider-runnable-track::before {
+  background: black; /* Restante negro */
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 10px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background-color: rgba(200, 200, 200, 0);
+  border: 0px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(200, 200, 200, 0);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  border: none;
+  background-color: transparent;
+}
+
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(200, 200, 200, 0);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: none;
+  background-color: transparent;
+}
+
+input[type="range"]::-ms-track {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(200, 200, 200, 0);
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type="range"]::-ms-thumb {
+  width: 0;
+  height: 0;
+  border: none;
+  background-color: transparent;
+}
+
+input[type="range"]::-ms-fill-lower {
+  background-color: red;
+  border-radius: 20px;
+  height: 6px;
+}
+
+input[type="range"]::-moz-range-progress {
+  background-color: red;
+  border-radius: 20px;
+  height: 6px;
+}
+
+input[type="range"]::-webkit-progress-value {
+  background-color: red;
+  border-radius: 20px;
+  height: 6px;
+}
+
+input[type="range"]::-ms-fill-upper {
+  background-color: rgba(200, 200, 200, 0);
+}
+
+
+
 </style>

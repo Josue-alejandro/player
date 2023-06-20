@@ -6,8 +6,8 @@
     <div class="minimized"
       :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.5)), url(' + songData.imagen + ')' }"
       v-if="minimized">
-      <div class="" @click="openMinimizedWindow">
-        <i class="material-icons icons_m">open_in_new</i>
+      <div class="popUpButton" @click="openMinimizedWindow">
+        <i class="material-icons icons_m popUpButton">open_in_new</i>
       </div>
       <div class="info_top">
         <img :src="songData.imagen" style="border-radius: 3px; margin-left: 5px;" width="80" height="80" />
@@ -33,15 +33,15 @@
         </Transition>
         <div>
           <div class="top_bar">
-            <div class="icons_top" @click="openNewWindow">
-              <i class="material-icons icons_m">open_in_new</i>
+            <div class="icons_top popUpButton" @click="$emit('un-minimized')">
+              <i class="material-icons icons_m">chevron_left</i>
             </div>
             <div class="icons_top" @click="playlistActive = !playlistActive">
               <i class="material-icons icons_m">playlist_play</i>
             </div>
           </div>
           <div class="cover">
-            <img :src="songData.imagen" class="cover" width="300" ref="image" @load="playAnimation">
+            <img :src="songData.imagen" class="cover cover_image" ref="image" @load="playAnimation">
             <span class="brand">IRADIODEMO</span>
             <span class="down_brand">Radio en HD, 24 horas en VIVO</span>
           </div>
@@ -137,6 +137,7 @@ export default {
       localTime: 0,
       volumenUp: false,
       minimized: false,
+      windowSize: 300,
       emisorasShow: false,
       programmingShow: false,
       currentDay: {},
@@ -215,11 +216,13 @@ export default {
     if(this.playerMode == 2){
       this.minimized = true
     }
-    if (window.screen.width < 750) {
-      this.minimized = true;
+    //if (window.screen.width < 750) {
+    //  this.minimized = true;
+   // }
+
+    if ( window.screen.width < 400 ){
+      this.windowSize = 150
     }
-    console.log()
-    this.updateProgramming()
 
 
   },
@@ -236,14 +239,14 @@ export default {
     },
     openNewWindow(){
       var url = "/ruta2"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=500,height=700,scrollbars=yes";
+      var opciones = "width=300,height=500,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
     },
     openMinimizedWindow(){
-      var url = "/ruta3"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=500,height=130,scrollbars=yes";
+      var url = "/ruta2"; // Ruta a tu componente de ventana emergente
+      var opciones = "width=300,height=600,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
@@ -375,6 +378,25 @@ body {
 .cover {
   border-radius: 10px;
 }
+
+.cover_image{
+  width: 300px;
+}
+
+@media (max-width: 300px) {
+  .cover_image{
+    width: 200px;
+  }
+
+  .popUpButton{
+    display: none;
+  }
+
+  .emisora{
+    margin-top: 0px;
+  }
+}
+
 
 .player {
   overflow: hidden;
