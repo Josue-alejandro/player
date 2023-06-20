@@ -27,7 +27,7 @@ export default {
 
 <style scoped>
 .emisora {
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0);
   max-width: 100vw;
   width: 100%;
   max-height: 90px;
@@ -39,7 +39,7 @@ export default {
   position: static;
   bottom: 0px;
   left: 0px;
-  margin-top: 2em;
+  margin-top: 0em;
 }
 
 .emisoras_slider{

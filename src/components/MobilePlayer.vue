@@ -1,6 +1,9 @@
 <template>
-  <div class="player" :style="{
-    background: minimized === false ? 'black' : 'rgba(0,0,0,0)',
+ <div class="player" :style="{
+    background: minimized === false ? 'linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('+ songData.imagen +')' : 'rgba(0,0,0,0)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backdropFilter: minimized === false ? 'blur(10px)' : 'none',
     height: minimized === true ? '130px' : '100vh'
   }">
     <div class="minimized"
@@ -40,14 +43,14 @@
               <i class="material-icons icons_m">playlist_play</i>
             </div>
           </div>
-          <div class="cover">
+          <div class="cover cover_back">
             <img :src="songData.imagen" class="cover cover_image" ref="image" @load="playAnimation">
             <span class="brand">IRADIODEMO</span>
             <span class="down_brand">Radio en HD, 24 horas en VIVO</span>
           </div>
           <div>
             <div class="song_duration">
-              <span>{{ formattedDuration }}</span>
+              <span style="font-size: 12px;">{{ formattedDuration }}</span>
               <input :value="barTime" type="range" class="progress_bar" id="progress-bar" min="0" :max="duration" />
             </div>
           </div>
@@ -386,6 +389,7 @@ body {
 @media (max-width: 300px) {
   .cover_image{
     width: 200px;
+    max-height: 200px;
   }
 
   .popUpButton{
@@ -483,6 +487,7 @@ body {
   justify-content: center;
   align-items: center;
   margin-top: 1em;
+  padding: 12px;
 }
 
 .song_duration span {

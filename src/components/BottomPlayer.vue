@@ -258,7 +258,7 @@ export default {
     },
     openNewWindow(){
       var url = "/ruta2"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=300,height=540,scrollbars=yes";
+      var opciones = "width=300,height=550,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
