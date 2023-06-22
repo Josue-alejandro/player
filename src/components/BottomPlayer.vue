@@ -119,6 +119,13 @@
 import InMyBlood from '../songs/son1.mp3';
 import EmisoraDesktop from './EmisoraDesktop.vue';
 import SpinIcon from './SpinIcon.vue'
+import DefaultImage from '../../public/default.jpeg'
+import File11 from '../json/11.json'
+import File36 from '../json/36.json'
+import File13 from '../json/13.json'
+import File15 from '../json/15.json'
+
+
 
 
 function formatDuration(durationInSeconds) {
@@ -129,20 +136,20 @@ function formatDuration(durationInSeconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 
-const obtenerDatos = async (parametro) => {
-   try {
-     const response = await fetch('http://localhost:3000/datos/' + parametro);
-     if (response.ok) {
-       const datosObtenidos = await response.json();
-       return datosObtenidos;
-     } else {
-       throw new Error('Error al obtener los datos.');
-     }
-   } catch (error) {
-     console.error(error);
-     throw error;
-   }
- };
+// const obtenerDatos = async (parametro) => {
+//    try {
+//      const response = await fetch('http://localhost:3000/datos/' + parametro);
+//      if (response.ok) {
+//        const datosObtenidos = await response.json();
+//        return datosObtenidos;
+//      } else {
+//        throw new Error('Error al obtener los datos.');
+//      }
+//    } catch (error) {
+//      console.error(error);
+//      throw error;
+//    }
+//  };
 
 
 import MobilePlayer from './MobilePlayer.vue';
@@ -307,6 +314,7 @@ export default {
       //buscar emisora seleccionada
       const emisoraEncontrada = this.emisoras.find(val => val.selectId == id)
       this.canciones = []
+      console.log(emisoraEncontrada)
       this.programming = emisoraEncontrada.programming
       emisoraEncontrada.audio.forEach((val, index) => {
         this.canciones.push({
@@ -328,13 +336,22 @@ export default {
        let respuestas = 0;
        let nulos = 0;
 
-       for (let parametro = 1; parametro <= 100; parametro++) {
+       const radios = [
+        File11,
+        File36,
+        File13,
+        File15
+       ]
+
+       for (let parametro = 0; parametro <= 4; parametro++) {
          try {
-           const datosObtenidos = await obtenerDatos(parametro);
+           //const datosObtenidos = await obtenerDatos(parametro);
+           const datosObtenidos = radios[parametro]
+           console.log(datosObtenidos)
            if (datosObtenidos) {
              if (datosObtenidos.radio.logo == "") {
                const emisora = {
-                 image: 'https://img.freepik.com/premium-vector/online-radio-station-vintage-icon-symbol_8071-25787.jpg',
+                 image: DefaultImage,
                  selectId: datosObtenidos.id,
                  audio: datosObtenidos.radio.audio,
                  artist_name: datosObtenidos.radio.name,
