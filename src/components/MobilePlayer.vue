@@ -543,16 +543,17 @@ input[type="range"] {
   background-color: rgba(200, 200, 200, 0);
   border: 0;
   outline: none;
+  
+  overflow: hidden;
+  border-radius: 16px;
 }
 
-input[type="range"]::-webkit-slider-runnable-track,
 input[type="range"]::-moz-range-track {
   width: 100%;
   height: 2px;
   background-color: rgba(200, 200, 200, 0);
 }
 
-input[type="range"]::-webkit-slider-thumb,
 input[type="range"]::-moz-range-thumb {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -584,12 +585,6 @@ input[type="range"]::-ms-thumb {
   margin-top: -4px;
 }
 
-input[type="range"]::-webkit-progress-value {
-  background-color: red;
-  border-radius: 20px;
-  height: 6px;
-}
-
 input[type="range"]::-moz-range-progress {
   background-color: red;
   border-radius: 20px;
@@ -619,17 +614,26 @@ input[type="range"]::-ms-fill-upper {
 .slider {
   width: 400px;
   height: 5px;
-  background-color: #ccc;
+  background-color: #030303;
   border-radius: 5px;
 }
 
-.slider::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   appearance: none;
-  width: 20px;
-  height: 40px;
-  background-color: red;
+  background-color: rgb(255, 0, 0);
+  width: 8px;
   border-radius: 50%;
   cursor: pointer;
+
+  /*  slider progress trick  */
+  box-shadow: -407px 0 0 400px rgb(255, 0, 0);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background-color: #ec0a0a00;
+  border-radius: 2px;
 }
 
 .fade-up-enter-active,

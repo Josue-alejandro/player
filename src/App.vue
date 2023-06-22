@@ -39,6 +39,7 @@ export default {
 /* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 3px;
+  height: 3px;
 }
 
 *::-webkit-scrollbar-track {

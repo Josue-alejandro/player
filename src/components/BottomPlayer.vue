@@ -575,6 +575,9 @@ export default {
   height: 3px;
   background-color: #fff;
   outline: none;
+
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 #progress-bar::-webkit-slider-runnable-track {
@@ -590,6 +593,8 @@ export default {
   height: 0;
   border: none;
   background-color: transparent;
+  /*  slider progress trick  */
+  box-shadow: -407px 0 0 400px rgb(252, 236, 15);
 }
 
 #progress-bar::-moz-range-track {
@@ -846,6 +851,8 @@ input[type="range"] {
   background-color: rgba(200, 200, 200, 0);
   border: 0px;
   outline: none;
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
@@ -913,6 +920,24 @@ input[type="range"]::-ms-fill-upper {
   background-color: rgba(200, 200, 200, 0);
 }
 
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  background-color: rgb(255, 0, 0);
+  width: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  /*  slider progress trick  */
+  box-shadow: -407px 0 0 400px rgb(255, 0, 0);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background-color: #ec0a0a00;
+  border-radius: 2px;
+}
 
 
 </style>

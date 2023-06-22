@@ -57,6 +57,11 @@ export default {
   scrollbar-width: none;
 }
 
+.emisoras_container::-webkit-scrollbar{
+  width: 0px;
+  height: 0px;
+}
+
 .emisora img {
   margin: 0.5em 1em;
   width: 50px;
