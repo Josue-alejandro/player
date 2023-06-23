@@ -39,6 +39,18 @@ export default {
   left: 330px;
 }
 
+@media (max-width: 600px) {
+  .emisora{
+    width: 100vw;
+    left: 0px;
+    height: 100px;
+    max-width: none;
+  }
+  .emisoras_container{
+    width: 100%;
+  }
+}
+
 .emisoras_slider{
   flex-direction: row;
   display: flex;

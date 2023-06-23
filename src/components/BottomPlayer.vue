@@ -54,7 +54,7 @@
       <div class="icons_div desktop_widget">
         <i class="material-icons icons_m" @click=" nextSong() ">skip_next</i>
       </div>
-      <div class="icons_div side_border desktop_widget" @click=" emisorasShow = !emisorasShow ">
+      <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow ">
         <i class="material-icons icons_m">radio</i>
       </div>
       <div class="song_duration desktop_widget">
@@ -64,21 +64,15 @@
         <input v-model=" currentTime " type="range" id="progress-bar" min="0" :max=" duration "
           @input=" updateCurrentTime " />
       </div>
-      <div class="icons_div desktop_widget">
+      <div class="icons_div">
         <i class="material-icons icons_m" @click=" listShow = !listShow ">playlist_play</i>
       </div>
       <div class="icons_div desktop_widget">
         <i class="material-icons icons_m" @click=" volumeShow = !volumeShow ">volume_up</i>
       </div>
-      <div class="icons_div desktop_widget">
+      <div class="icons_div">
         <i class="material-icons icons_m"
           @click="openNewWindow">open_in_new</i>
-      </div>
-      <div class="icons_div mobile_widget">
-        <i class="material-icons icons_m" style="font-size: 26px;"
-           @click="minimizedState = false">
-          chevron_right
-        </i>
       </div>
     </div>
     <Transition name="mini">
@@ -264,7 +258,7 @@ export default {
       });
     },
     openNewWindow(){
-      var url = "/ruta2"; // Ruta a tu componente de ventana emergente
+      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
       var opciones = "width=300,height=550,scrollbars=yes";
 
       // Abrir ventana emergente
@@ -554,6 +548,14 @@ export default {
   position: fixed;
   bottom: 70px;
   right: 100px;
+}
+
+@media (max-width: 930px) {
+  .songs_list {
+    bottom: 60px;
+    right: 0px;
+    height: 70vh;
+  }
 }
 
 .song_info {
