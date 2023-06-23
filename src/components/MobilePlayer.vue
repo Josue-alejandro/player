@@ -36,8 +36,8 @@
         </Transition>
         <div>
           <div class="top_bar">
-            <div class="icons_top popUpButton" @click="$emit('un-minimized')">
-              <i class="material-icons icons_m">chevron_left</i>
+            <div class="icons_top popUpButton" @click="openNewWindow">
+              <i class="material-icons icons_m">open_in_new</i>
             </div>
             <div class="icons_top" @click="playlistActive = !playlistActive">
               <i class="material-icons icons_m">playlist_play</i>
@@ -241,8 +241,8 @@ export default {
       this.$emit('activeSong', data);
     },
     openNewWindow(){
-      var url = "/ruta2"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=300,height=500,scrollbars=yes";
+      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
+      var opciones = "width=300,height=550,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
