@@ -75,7 +75,7 @@
           @click="openNewWindow">open_in_new</i>
       </div>
     </div>
-    <Transition name="mini">
+    <!-- Componente de modo vertical -->
       <MobilePlayer 
       v-if=" minimizedState === false " 
       class="mobile_bar" 
@@ -105,7 +105,6 @@
       @emisora-on=" emisorasShow = true "
       @select-emisora=" selectEmisora " 
       @un-minimized=" unMinimized "></MobilePlayer>
-    </Transition>
   </div>
 </template>
 
@@ -734,6 +733,9 @@ export default {
   transition: transform 0.2s;
 }
 
+/* transicion al modo vertical, (eliminada por el momento) */
+
+/*
 
 .mini-enter-active {
   animation: bounce-in 0.5s
@@ -743,6 +745,8 @@ export default {
   transition: opacity 0.5s, transform 0.5s ease;
   transform: translateX(100vh);
 }
+
+*/
 
 @keyframes bounce-in {
   0% {
