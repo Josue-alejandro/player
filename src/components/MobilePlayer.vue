@@ -248,8 +248,8 @@ export default {
       window.open(url, "_blank", opciones);
     },
     openMinimizedWindow(){
-      var url = "/ruta2"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=300,height=600,scrollbars=yes";
+      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
+      var opciones = "width=300,height=550,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
