@@ -4,7 +4,7 @@
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backdropFilter: minimized === false ? 'blur(10px)' : 'none',
-    height: minimized === true ? '130px' : '100%s'
+    height: minimized === true ? '130px' : '100vh'
   }">
     <div class="minimized"
       :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.5)), url(' + songData.imagen + ')' }"
@@ -233,6 +233,12 @@ export default {
 
 
   },
+  computed: {
+     screenHeightWithoutBrowserBar() {
+      const height = window.innerHeight;
+      return height.toString() + "px";
+    }
+  },
   methods: {
     playSong(cancion, nombre, autor, id, imagen) {
       const data = {
@@ -409,6 +415,8 @@ body {
 .player {
   overflow: hidden;
   height: 100vh;
+  width: 100vw;
+  position: fixed;
   transition: background 1s, height 0.4s;
 }
 
@@ -453,7 +461,7 @@ body {
   position: fixed;
   bottom: 0;
   align-items: center;
-  padding-bottom: 1.50em;
+  padding-bottom: 10vh;
 }
 
 .carousel {
