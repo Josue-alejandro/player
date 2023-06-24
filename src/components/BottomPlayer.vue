@@ -54,10 +54,10 @@
         <img :src="songData.imagen" width="50">
       </div>
       <div class="icons_div desktop_widget" >
-        <i class="material-icons icons_m" @click=" previousSong() ">skip_previous</i>
+        <i class="material-icons icons_m" @click=" previousEmisora() ">skip_previous</i>
       </div>
       <div class="icons_div desktop_widget">
-        <i class="material-icons icons_m" @click=" nextSong() ">skip_next</i>
+        <i class="material-icons icons_m" @click=" nextEmisora() ">skip_next</i>
       </div>
       <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow; listShow = false ">
         <i class="material-icons icons_m">radio</i>
@@ -103,8 +103,8 @@
       :updatebar=" updateCurrentTime " 
       @active-song=" changeSongMobile "
       @play-song=" playHandle " 
-      @next-song=" nextSong() " 
-      @previous-song=" previousSong() "
+      @next-song=" nextEmisora() " 
+      @previous-song=" previousEmisora() "
       @left-handler=" leftHandler " 
       @right-handler=" rightHandler " 
       @emisora-on=" emisorasShow = true "
@@ -161,6 +161,7 @@ export default {
       minimizedState: true,
       isPlaying: false,
       isLoading: false,
+      currentEmisoraId: 0,
       volume: 50,
       duration: 100,
       currentTime: 50,
@@ -307,13 +308,36 @@ export default {
     unMinimized() {
       this.minimizedState = true
     },
+    previousEmisora(){
+      const siguienteIndex = this.currentEmisoraId - 1
+      if(siguienteIndex >= 0) {
+        const idEmisora = this.emisoras[siguienteIndex].selectId
+        this.selectEmisora(idEmisora)
+      }else{
+        const idEmisora = this.emisoras[this.emisoras.length - 1].selectId
+        this.selectEmisora(idEmisora)
+      }
+
+    },
+    nextEmisora(){
+      const siguienteIndex = this.currentEmisoraId + 1
+      if(this.emisoras.length > siguienteIndex) {
+        const idEmisora = this.emisoras[siguienteIndex].selectId
+        this.selectEmisora(idEmisora)
+      }else{
+        const idEmisora = this.emisoras[0].selectId
+        this.selectEmisora(idEmisora)
+      }
+
+    },
     selectEmisora(id) {
       this.emisoraSelected = id
       //buscar emisora seleccionada
       const emisoraEncontrada = this.emisoras.find(val => val.selectId == id)
+      const indiceEmisora = this.emisoras.findIndex(val => val.selectId == id)
       this.canciones = []
-      console.log(emisoraEncontrada)
       this.programming = emisoraEncontrada.programming
+      this.currentEmisoraId = indiceEmisora
       emisoraEncontrada.audio.forEach((val, index) => {
         this.canciones.push({
           id: index,
@@ -323,6 +347,7 @@ export default {
           imagen: emisoraEncontrada.image
         })
       });
+      console.log(this.currentEmisoraId)
       this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
     }
   },
