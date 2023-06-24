@@ -4,7 +4,7 @@
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backdropFilter: minimized === false ? 'blur(10px)' : 'none',
-    height: minimized === true ? '130px' : '100vh'
+    height: minimized === true ? '130px' : '100%s'
   }">
     <div class="minimized"
       :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.5)), url(' + songData.imagen + ')' }"
@@ -27,9 +27,13 @@
       </div>
     </div>
     <Transition name="mini">
-      <div v-if="minimized === false">
+      <div 
+      v-if="minimized === false" 
+      @click="handleVolumeContainer">
         <Transition name="fade-up">
-          <div class="fixed-container" v-if="volumenUp">
+          <div 
+          class="fixed-container" 
+          v-if="volumenUp">
             <i class="material-icons icons_m">volume_up</i>
             <input type="range" :value="volumen" @input="$emit('update-volumen', $event.target.value)" class="slider" />
           </div>

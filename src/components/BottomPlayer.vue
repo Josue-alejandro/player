@@ -38,9 +38,14 @@
         </Transition>
       </div>
       <div class="song_name">
-        <span class="radio_text">
-          IRADIODEMO
-        </span>
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+          <span class="radio_text">
+            IRADIODEMO
+          </span>
+          <span style="color: white; background-color: red; border-radius: 5px; font-size: 9px; padding: 0px 4px; margin-left: 3px;">
+            EN VIVO
+          </span>
+        </div>
         <span style="width: 500px; text-align: left;" class="nameMotion">
           {{ songData.currentAuthor }} - {{ songData.currentSongName }}
         </span>
@@ -54,7 +59,7 @@
       <div class="icons_div desktop_widget">
         <i class="material-icons icons_m" @click=" nextSong() ">skip_next</i>
       </div>
-      <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow ">
+      <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow; listShow = false ">
         <i class="material-icons icons_m">radio</i>
       </div>
       <div class="song_duration desktop_widget">
@@ -65,7 +70,7 @@
           @input=" updateCurrentTime " />
       </div>
       <div class="icons_div">
-        <i class="material-icons icons_m" @click=" listShow = !listShow ">playlist_play</i>
+        <i class="material-icons icons_m" @click=" listShow = !listShow; emisorasShow = false ">playlist_play</i>
       </div>
       <div class="icons_div desktop_widget">
         <i class="material-icons icons_m" @click=" volumeShow = !volumeShow ">volume_up</i>
@@ -460,6 +465,7 @@ export default {
 .radio_text {
   color: red;
   font-weight: bold;
+  margin-top: 3px;
 }
 
 .play_icon {
@@ -473,7 +479,6 @@ export default {
   width: 200px;
   align-items: center;
   font-size: 12px;
-  padding: 0px 20px 0px 20px;
   display: flex;
   flex-direction: column;
   align-items: start;
