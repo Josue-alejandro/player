@@ -50,34 +50,36 @@
           {{ songData.currentAuthor }} - {{ songData.currentSongName }}
         </span>
       </div>
-      <div style="height: 50px;" class="desktop_widget">
-        <img :src="songData.imagen" width="50">
-      </div>
-      <div class="icons_div desktop_widget" >
-        <i class="material-icons icons_m" @click=" previousEmisora() ">skip_previous</i>
-      </div>
-      <div class="icons_div desktop_widget">
-        <i class="material-icons icons_m" @click=" nextEmisora() ">skip_next</i>
-      </div>
-      <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow; listShow = false ">
-        <i class="material-icons icons_m">radio</i>
-      </div>
-      <div class="song_duration desktop_widget">
-        <span>{{ formattedDuration }}</span>
-      </div>
-      <div class="progress_bar desktop_widget">
-        <input v-model=" currentTime " type="range" id="progress-bar" min="0" :max=" duration "
-          @input=" updateCurrentTime " />
-      </div>
-      <div class="icons_div">
-        <i class="material-icons icons_m" @click=" listShow = !listShow; emisorasShow = false ">playlist_play</i>
-      </div>
-      <div class="icons_div desktop_widget">
-        <i class="material-icons icons_m" @click=" volumeShow = !volumeShow ">volume_up</i>
-      </div>
-      <div class="icons_div">
-        <i class="material-icons icons_m"
-          @click="openNewWindow">open_in_new</i>
+      <div class="widgets_section">
+        <div style="height: 50px;" class="desktop_widget">
+          <img :src="songData.imagen" width="50">
+        </div>
+        <div class="icons_div desktop_widget" >
+          <i class="material-icons icons_m" @click=" previousEmisora()">skip_previous</i>
+        </div>
+        <div class="icons_div desktop_widget">
+          <i class="material-icons icons_m" @click=" nextEmisora()">skip_next</i>
+        </div>
+        <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow; listShow = false">
+          <i class="material-icons icons_m">radio</i>
+        </div>
+        <div class="song_duration desktop_widget">
+          <span>{{ formattedDuration }}</span>
+        </div>
+        <div class="progress_bar desktop_widget">
+          <input v-model="currentTime" type="range" id="progress-bar" min="0" :max="duration"
+            @input="updateCurrentTime" />
+        </div>
+        <div class="icons_div">
+          <i class="material-icons icons_m" @click=" listShow = !listShow; emisorasShow = false">playlist_play</i>
+        </div>
+        <div class="icons_div desktop_widget">
+          <i class="material-icons icons_m" @click=" volumeShow = !volumeShow">volume_up</i>
+        </div>
+        <div class="icons_div">
+          <i class="material-icons icons_m"
+            @click="openNewWindow">open_in_new</i>
+        </div>
       </div>
     </div>
     <!-- Componente de modo vertical -->
@@ -443,8 +445,18 @@ export default {
   align-items: center;
 }
 
-.mobile_widget{
-  display: none;
+.widgets_section{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  min-width: 900px;
+}
+
+@media (min-width: 1300px) {
+  .widgets_section{
+    min-width: 1600px;
+  }
 }
 
 @media (max-width: 930px) {
@@ -544,8 +556,14 @@ export default {
 }
 
 .progress_bar {
-  width: 40%;
+  width: 56%;
   padding: 0px 0px 0px 10px;
+}
+
+@media (min-width: 1300px) {
+  .progress_bar{
+    width: 70%;
+  }
 }
 
 .volumen_container {
