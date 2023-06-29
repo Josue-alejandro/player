@@ -1,6 +1,6 @@
 <template>
  <div class="player" :style="{
-    background: minimized === false ? 'linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('+ songData.imagen +')' : 'rgba(0,0,0,0)',
+    background: minimized === false ? 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 1)), url('+ songData.imagen +')' : 'rgba(0,0,0,0)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backdropFilter: minimized === false ? 'blur(10px)' : 'none',
@@ -41,10 +41,10 @@
         <div>
           <div class="top_bar">
             <div class="icons_top popUpButton" @click="openNewWindow">
-              <i class="material-icons icons_m">open_in_new</i>
+              <i class="material-icons icons_m" style="font-size: 18px;">open_in_new</i>
             </div>
             <div class="icons_top" @click="playlistActive = !playlistActive">
-              <i class="material-icons icons_m">playlist_play</i>
+              <i class="material-icons icons_m" style="font-size: 23px;">playlist_play</i>
             </div>
           </div>
           <div class="cover cover_back">
@@ -334,6 +334,16 @@ body {
   transition: 0.3s ease-in-out;
 }
 
+.icons_m{
+  font-size: 24px;
+}
+
+@media (max-width: 400px) {
+  .icons_m{
+    font-size: 20px;
+  }
+}
+
 .options {
   cursor: pointer;
   width: 60%;
@@ -389,18 +399,20 @@ body {
 }
 
 .cover {
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 .cover_image{
   width: 300px;
 }
 
-@media (max-width: 300px) {
+@media (max-width: 500px) {
   .cover_image{
-    width: 200px;
-    max-height: 200px;
+    width: 73%;
   }
+}
+
+@media (max-width: 300px) {
 
   .popUpButton{
     display: none;
@@ -464,6 +476,12 @@ body {
   padding-bottom: 10vh;
 }
 
+@media (max-width: 300px) {
+  .player_bar{
+    padding-bottom: 10px;
+  }
+}
+
 .carousel {
   display: flex;
   flex-direction: row;
@@ -486,6 +504,7 @@ body {
 
 .down_brand {
   color: white;
+  font-size: 12px;
 }
 
 .progress_bar {
@@ -500,6 +519,12 @@ body {
   align-items: center;
   margin-top: 1em;
   padding: 12px;
+}
+
+@media (max-width: 300px) {
+  .song_duration{
+    padding: 0px 12px;
+  }
 }
 
 .song_duration span {
@@ -519,11 +544,18 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
+  width: 65px;
+  height: 65px;
   margin-left: 20px;
   margin-right: 20px;
   background-color: black;
+}
+
+@media (max-width: 300px) {
+  .play_button{
+    width: 50px;
+    height: 50px;
+  }
 }
 
 .play_button_top {

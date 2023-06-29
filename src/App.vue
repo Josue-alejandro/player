@@ -16,6 +16,7 @@ export default {
 *{
   margin: 0px;
   padding: 0px;
+  font-family: 'Poppins', sans-serif;
 }
 
 @media (max-width: 767px) {

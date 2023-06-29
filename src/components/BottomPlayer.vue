@@ -483,7 +483,7 @@ export default {
 }
 
 .icons_m {
-  font-size: 17px;
+  font-size: 19px;
   cursor: pointer
 }
 
