@@ -7,13 +7,14 @@
     height: minimized === true ? '130px' : '100vh'
   }">
     <div class="minimized"
-      :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.5)), url(' + songData.imagen + ')' }"
+      :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.8), rgba(10,10,10,0.8)), url(' + songData.imagen + ')' }"
       v-if="minimized">
       <div class="popUpButton" @click="openMinimizedWindow">
         <i class="material-icons icons_m popUpButton">open_in_new</i>
       </div>
       <div class="info_top">
-        <img :src="songData.imagen" style="border-radius: 3px; margin-left: 5px;" width="80" height="80" />
+        <img width="25" height="25" class="live_icon" src="https://seeklogo.com/images/Y/youtube-live-logo-43F98BDB4C-seeklogo.com.png">
+        <img :src="songData.imagen" style="border-radius: 6px; margin-left: 5px;" width="80" height="80" />
         <div class="title">
           <p>EN VIVO</p>
           <span style="font-size: 16px; font-weight: bold;">{{ songData.currentAuthor }}</span>
@@ -354,6 +355,7 @@ body {
   flex-direction: row;
   width: 100%;
   padding-left: 1em;
+  align-items: center;
 }
 
 .minimized {
@@ -373,7 +375,7 @@ body {
 .title {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: center;
   text-align: left;
   color: white;
   width: 50%;
@@ -382,8 +384,8 @@ body {
 .title p {
   background-color: red;
   border-radius: 5px;
-  padding: 0.2em;
-  width: 60px;
+  padding: 0em;
+  width: 50px;
   font-weight: bold;
   font-size: 10px;
   text-align: center;
@@ -459,6 +461,13 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.live_icon{
+  border-radius: 2px;
+  position: absolute;
+  top: 14px;
+  left: 7px;
 }
 
 .icons_top {
@@ -551,7 +560,7 @@ body {
   background-color: black;
 }
 
-@media (max-width: 300px) {
+@media (max-width: 500px) {
   .play_button{
     width: 50px;
     height: 50px;
