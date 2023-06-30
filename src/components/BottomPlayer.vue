@@ -7,6 +7,9 @@
         :emisorasShow="emisorasShow" :emisorasProgress="emisorasProgress" :emisoras="emisoras"
         :emisoraSelected="emisoraSelected"></EmisoraDesktop>
     </Transition>
+    <Transition name="slide-fade">
+      <i class="material-icons" v-if="emisorasShow" style="position: fixed; font-size: 50px; color: #000; bottom: 41px; left: 450px;">arrow_drop_down</i>
+    </Transition>
     <Transition name="slide-fade2">
       <div class="slider-container" v-if="volumeShow">
         <input type="range" min="0" max="100" v-model="volume" @input="updateVolume">
@@ -28,6 +31,9 @@
           </li>
         </ul>
       </div>
+    </Transition>
+    <Transition name="slide-fade">
+      <i class="material-icons" v-if="listShow" style="position: fixed; font-size: 50px; color: #000; bottom: 41px; right: 100px;">arrow_drop_down</i>
     </Transition>
     <div class="player_bar" v-if=" minimizedState === true && mobileMode === false ">
       <div class="play_button" @click=" playHandle ">

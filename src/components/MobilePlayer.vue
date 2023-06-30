@@ -21,9 +21,10 @@
           <span style="font-size: 12px;">{{ songData.currentSongName }}</span>
         </div>
         <div class="play_button" @click="$emit('playSong')">
-          <i class="material-icons play_icon" v-if="!isPlaying">play_arrow</i>
-          <i class="material-icons play_icon" v-else>pause</i>
-
+          <Transition name="change">
+            <i class="material-icons play_icon" style="position: absolute;" v-if="!isPlaying">play_arrow</i>
+            <i class="material-icons play_icon" style="position: absolute;" v-else>pause</i>
+          </Transition>
         </div>
       </div>
     </div>
@@ -79,9 +80,11 @@
               <i class="material-icons icons_m" @click="$emit('previous-song')">skip_previous</i>
             </div>
             <div class="play_button" @click="$emit('playSong')" style="background-color: rgba(0, 0, 0, 0);">
-              <i class="material-icons play_icon" v-if=" !isPlaying && isLoading === false ">play_arrow</i>
-              <i class="material-icons play_icon" v-else-if=" isPlaying && isLoading === false ">pause</i>
-              <SpinIcon v-else></SpinIcon>
+              <Transition name="change">
+                <i class="material-icons play_icon" style="position: absolute;" v-if=" !isPlaying && isLoading === false ">play_arrow</i>
+                <i class="material-icons play_icon" style="position: absolute;" v-else-if=" isPlaying && isLoading === false ">pause</i>
+                <SpinIcon v-else style="position: absolute;"></SpinIcon>
+              </Transition>
             </div>
             <div class="icons_div">
               <i class="material-icons icons_m" @click="$emit('next-song')">skip_next</i>
@@ -739,5 +742,25 @@ input[type="range"]::-webkit-slider-runnable-track {
   100% {
     opacity: 1;
   }
+}
+
+@keyframes showIn {
+  0% {
+    opacity: 1;
+    transform: scale(1)
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.change-enter-active {
+  animation: showIn 0.2s reverse;
+}
+
+.change-leave-to {
+  animation: showIn 0.2s;
 }
 </style>
