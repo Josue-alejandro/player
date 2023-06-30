@@ -459,9 +459,19 @@ export default {
   }
 }
 
+@media (max-width: 1070px) {
+  .widgets_section{
+    min-width: 720px;
+  }
+}
+
 @media (max-width: 930px) {
   .desktop_widget{
     display: none;
+  }
+
+  .widgets_section{
+    min-width: 100px;
   }
   
   .mobile_widget{
