@@ -218,20 +218,20 @@ export default {
       }
     },
     playHandle() {
-  const audio = this.$refs.audioPlayer;
-  this.isLoading = true; // Activar la carga
-  
-  if (this.isPlaying) {
-    audio.pause();
-  } else {
-    audio.play();
-  }
-  
-  setTimeout(() => {
-    this.isPlaying = !this.isPlaying;
-    this.isLoading = false; // Desactivar la carga después de medio segundo
-  }, 300);
-},
+      const audio = this.$refs.audioPlayer;
+
+      if (this.isPlaying) {
+        audio.pause();
+        this.isPlaying = false;
+      } else {
+        this.isLoading = true; // Activar la carga
+        audio.play();
+        this.isPlaying = true;
+        setTimeout(() => {
+          this.isLoading = false; // Desactivar la carga después de medio segundo
+        }, 500);
+      }
+    },
     changeSongMobile(data) {
       this.changeSong(data.cancion, data.nombre, data.autor);
       this.songData.id = data.id,
