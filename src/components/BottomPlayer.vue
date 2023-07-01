@@ -57,8 +57,8 @@
         </span>
       </div>
       <div class="widgets_section">
-        <div style="height: 50px;" class="desktop_widget">
-          <img :src="songData.imagen" width="50">
+        <div style="height: 70px;" class="desktop_widget">
+          <img :src="songData.imagen" width="70">
         </div>
         <div class="icons_div desktop_widget" >
           <i class="material-icons icons_m" @click=" previousEmisora()">skip_previous</i>
@@ -461,7 +461,7 @@ export default {
   position: fixed;
   bottom: 0px;
   width: 100%;
-  height: 50px;
+  height: 70px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -473,6 +473,7 @@ export default {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  height: 70px;
   min-width: 900px;
 }
 
@@ -541,7 +542,12 @@ export default {
 .play_icon {
   font-size: 40px;
   position: absolute;
-  top: 5px;
+  top: 15px;
+  transition: color 0.2s;
+}
+
+.play_icon:hover{
+  color: rgb(252, 32, 32)
 }
 
 .song_name {
