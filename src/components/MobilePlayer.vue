@@ -23,7 +23,7 @@
         <div class="play_button" @click="$emit('playSong')">
           <Transition name="change">
             <i class="material-icons play_icon" style="position: absolute;" v-if="!isPlaying">play_arrow</i>
-            <i class="material-icons play_icon" style="position: absolute;" v-else>pause</i>
+            <i class="material-icons play_icon" style="position: absolute; transform: scaleX(0.9);" v-else>pause</i>
           </Transition>
         </div>
       </div>
@@ -46,7 +46,7 @@
               <i class="material-icons icons_m" style="font-size: 18px;">open_in_new</i>
             </div>
             <div class="icons_top" @click="playlistActive = !playlistActive">
-              <i class="material-icons icons_m" style="font-size: 23px;">playlist_play</i>
+              <i class="material-icons icons_m" style="font-size: 27px; transform: scaleX(1.3) scaleY(0.9);">playlist_play</i>
             </div>
           </div>
           <div class="cover cover_back">
@@ -82,7 +82,7 @@
             <div class="play_button" @click="$emit('playSong')" style="background-color: rgba(0, 0, 0, 0);">
               <Transition name="change">
                 <i class="material-icons play_icon" style="position: absolute;" v-if=" !isPlaying && isLoading === false ">play_arrow</i>
-                <i class="material-icons play_icon" style="position: absolute;" v-else-if=" isPlaying && isLoading === false ">pause</i>
+                <i class="material-icons play_icon" style="position: absolute; transform: scaleX(0.9);" v-else-if=" isPlaying && isLoading === false ">pause</i>
                 <SpinIcon v-else style="position: absolute;"></SpinIcon>
               </Transition>
             </div>
@@ -551,7 +551,7 @@ body {
 }
 
 .play_button {
-  border: 1px solid white;
+  border: 2px solid white;
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -565,8 +565,8 @@ body {
 
 @media (max-width: 500px) {
   .play_button{
-    width: 50px;
-    height: 50px;
+    width: 58px;
+    height: 58px;
   }
 }
 
