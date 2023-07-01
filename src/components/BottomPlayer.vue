@@ -218,14 +218,20 @@ export default {
       }
     },
     playHandle() {
-      const audio = this.$refs.audioPlayer;
-      if (this.isPlaying) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
-      this.isPlaying = !this.isPlaying;
-    },
+  const audio = this.$refs.audioPlayer;
+  this.isLoading = true; // Activar la carga
+  
+  if (this.isPlaying) {
+    audio.pause();
+  } else {
+    audio.play();
+  }
+  
+  setTimeout(() => {
+    this.isPlaying = !this.isPlaying;
+    this.isLoading = false; // Desactivar la carga después de medio segundo
+  }, 300);
+},
     changeSongMobile(data) {
       this.changeSong(data.cancion, data.nombre, data.autor);
       this.songData.id = data.id,
@@ -256,7 +262,7 @@ export default {
       this.formattedDuration = formatDuration(totalSeconds);
     },
     changeSong(song, name, author, imagen) {
-      this.isLoading = true
+      this.isLoading = true;
       this.songData.currentAuthor = author;
       this.songData.currentSongName = name;
       this.songData.imagen = imagen;
@@ -264,11 +270,22 @@ export default {
       audio.pause();
       audio.currentTime = 0;
       this.songData.currentSong = song;
-      audio.addEventListener('loadedmetadata', () => {
+
+      const playNewSong = () => {
         audio.play(); // Reproducir la nueva canción automáticamente una vez cargada
         this.isPlaying = true;
         this.isLoading = false;
-      });
+        audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
+      };
+
+      if (audio.readyState >= 2) {
+        // Si el archivo de audio ya está cargado
+        setTimeout(() => {
+          playNewSong();
+        }, 1000); // Mostrar un segundo de carga antes de reproducir
+      } else {
+        audio.addEventListener('canplaythrough', playNewSong);
+      }
     },
     openNewWindow(){
       var url = "/ruta1"; // Ruta a tu componente de ventana emergente
