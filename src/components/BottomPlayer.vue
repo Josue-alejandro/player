@@ -8,7 +8,7 @@
         :emisoraSelected="emisoraSelected"></EmisoraDesktop>
     </Transition>
     <Transition name="slide-fade">
-      <i class="material-icons" v-if="emisorasShow" style="position: fixed; font-size: 50px; color: #000; bottom: 41px; left: 450px;">arrow_drop_down</i>
+      <i class="material-icons" v-if="emisorasShow" style="position: fixed; font-size: 50px; color: #000; bottom: 61px; left: 484px;">arrow_drop_down</i>
     </Transition>
     <Transition name="slide-fade2">
       <div class="slider-container" v-if="volumeShow">
@@ -33,7 +33,7 @@
       </div>
     </Transition>
     <Transition name="slide-fade">
-      <i class="material-icons" v-if="listShow" style="position: fixed; font-size: 50px; color: #000; bottom: 41px; right: 100px;">arrow_drop_down</i>
+      <i class="material-icons" v-if="listShow" style="position: fixed; font-size: 50px; color: #000; bottom: 61px; right: 100px;">arrow_drop_down</i>
     </Transition>
     <div class="player_bar" v-if=" minimizedState === true && mobileMode === false ">
       <div class="play_button" @click=" playHandle ">
@@ -632,7 +632,7 @@ export default {
   font-size: 12px;
   overflow-x: scroll;
   position: fixed;
-  bottom: 70px;
+  bottom: 90px;
   right: 100px;
 }
 
@@ -784,7 +784,7 @@ export default {
   padding: 0.5em;
   display: flex;
   position: fixed;
-  bottom: 134px;
+  bottom: 154px;
   right: 0px;
   align-items: center;
   transform: rotate(270deg);

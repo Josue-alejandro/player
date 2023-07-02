@@ -35,8 +35,8 @@ export default {
   align-items: center;
   border-radius: 30px;
   position: fixed;
-  bottom: 70px;
-  left: 330px;
+  bottom: 90px;
+  left: 375px;
 }
 
 @media (max-width: 600px) {
