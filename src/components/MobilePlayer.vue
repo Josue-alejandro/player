@@ -10,7 +10,7 @@
       :style="{ 'background': 'linear-gradient(rgba(10,10,10,0.8), rgba(10,10,10,0.8)), url(' + songData.imagen + ')' }"
       v-if="minimized">
       <div class="popUpButton" @click="openMinimizedWindow">
-        <i class="material-icons icons_m popUpButton">open_in_new</i>
+        <i class="material-icons icons_m popUpButton" style="margin: 5px;">open_in_new</i>
       </div>
       <div class="info_top">
         <img width="25" height="25" class="live_icon" src="https://seeklogo.com/images/Y/youtube-live-logo-43F98BDB4C-seeklogo.com.png">
@@ -22,8 +22,9 @@
         </div>
         <div class="play_button" @click="$emit('playSong')">
           <Transition name="change">
-            <i class="material-icons play_icon" style="position: absolute;" v-if="!isPlaying">play_arrow</i>
-            <i class="material-icons play_icon" style="position: absolute; transform: scaleX(0.9);" v-else>pause</i>
+            <i class="material-icons play_icon" style="position: absolute;" v-if=" !isPlaying && isLoading === false ">play_arrow</i>
+            <i class="material-icons play_icon" style="position: absolute; transform: scaleX(0.9);" v-else-if=" isPlaying && isLoading === false ">pause</i>
+            <SpinIcon v-else style="position: absolute;"></SpinIcon>
           </Transition>
         </div>
       </div>
@@ -560,7 +561,7 @@ body {
   height: 65px;
   margin-left: 20px;
   margin-right: 20px;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 500px) {

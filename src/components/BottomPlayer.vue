@@ -76,13 +76,13 @@
           <input v-model="currentTime" type="range" id="progress-bar" min="0" :max="duration"
             @input="updateCurrentTime" />
         </div>
-        <div class="icons_div">
-          <i class="material-icons icons_m" @click=" listShow = !listShow; emisorasShow = false">playlist_play</i>
+        <div class="icons_div playlist_div">
+          <i class="material-icons icons_m playlist_button" @click=" listShow = !listShow; emisorasShow = false">playlist_play</i>
         </div>
         <div class="icons_div desktop_widget">
           <i class="material-icons icons_m" @click=" volumeShow = !volumeShow">volume_up</i>
         </div>
-        <div class="icons_div">
+        <div class="icons_div openNew_div">
           <i class="material-icons icons_m"
             @click="openNewWindow">open_in_new</i>
         </div>
@@ -743,8 +743,6 @@ export default {
   }
 }
 
-@media (min-width: 770px) {}
-
 /*
   Enter and leave animations can use different
   durations and timing functions.
@@ -1032,5 +1030,23 @@ input[type="range"]::-webkit-slider-runnable-track {
   border-radius: 2px;
 }
 
+.playlist_button{
+  font-size: 25px;
+}
+
+@media (max-width: 930px) {
+  .playlist_button{
+    height: 31.5px;
+  }
+
+  .playlist_div{
+    height: 32.5px;
+    margin-left: 5px;
+  }
+
+  .openNew_div{
+    height: 28px;
+  }
+}
 
 </style>
