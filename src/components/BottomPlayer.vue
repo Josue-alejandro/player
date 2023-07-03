@@ -638,9 +638,11 @@ export default {
 
 @media (max-width: 930px) {
   .songs_list {
-    bottom: 60px;
+    bottom: 80px;
     right: 0px;
     height: 70vh;
+    margin: 10px;
+    margin-bottom: 0px;
   }
 }
 
@@ -739,7 +741,7 @@ export default {
   }
 
   .songs_list {
-    width: 100%;
+    width: 95.1%;
   }
 }
 

@@ -38,19 +38,6 @@ export default {
   bottom: 90px;
   left: 375px;
 }
-
-@media (max-width: 600px) {
-  .emisora{
-    width: 100vw;
-    left: 0px;
-    height: 100px;
-    max-width: none;
-  }
-  .emisoras_container{
-    width: 100%;
-  }
-}
-
 .emisoras_slider{
   flex-direction: row;
   display: flex;
@@ -72,4 +59,28 @@ export default {
   display: flex;
   align-items: center;
 }
+
+@media (max-width: 600px) {
+  .emisora{
+    width: 95vw;
+    left: 0px;
+    height: 100px;
+    max-width: none;
+    margin-left: 9px;
+  }
+
+  .emisora img{
+    width: 55px;
+  }
+
+  .emisoras_container{
+    width: 100%;
+  }
+
+  .emisora_img {
+    margin: 0px 5px 0px 5px;
+  }
+}
+
+
 </style>
