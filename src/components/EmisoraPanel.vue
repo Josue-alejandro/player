@@ -64,7 +64,7 @@ export default {
 
 .emisora img {
   margin: 0.5em 1em;
-  width: 40px;
+  width: 50px;
   transition: transform 0.1s;
 }
 

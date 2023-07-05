@@ -442,6 +442,8 @@ export default {
     this.songData.currentSongName = this.canciones[0].nombre
     const audio = this.$refs.audioPlayer;
 
+    this.nextEmisora()
+
 
     audio.addEventListener('loadedmetadata', () => {
       const totalSeconds = Math.round(audio.duration);
