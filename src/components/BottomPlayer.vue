@@ -444,12 +444,12 @@ export default {
 
     this.nextEmisora()
 
-
     audio.addEventListener('loadedmetadata', () => {
-      const totalSeconds = Math.round(audio.duration);
-      this.formattedDuration = formatDuration(totalSeconds);
+      //const totalSeconds = Math.round(audio.duration);
+      //this.formattedDuration = formatDuration(totalSeconds);
     });
     this.progressInterval = setInterval(this.updateProgress, 1000); // Actualizar cada segundo
+    this.isLoading = false
   },
   beforeUnmount() {
     clearInterval(this.progressInterval);

@@ -17,7 +17,7 @@
         <img :src="songData.imagen" style="border-radius: 6px; margin-left: 5px;" width="80" height="80" />
         <div class="title">
           <p>EN VIVO</p>
-          <span style="font-size: 16px; font-weight: bold;">{{ songData.currentAuthor }}</span>
+          <span class="nameMotion" style="font-size: 16px; font-weight: bold; min-width: 400px">{{ songData.currentAuthor }}</span>
           <span style="font-size: 12px;">{{ songData.currentSongName }}</span>
         </div>
         <div class="play_button" @click="$emit('playSong')">
@@ -383,6 +383,7 @@ body {
   text-align: left;
   color: white;
   width: 50%;
+  overflow: hidden;
 }
 
 .title p {
@@ -449,6 +450,28 @@ body {
   justify-content: space-around;
 }
 
+.nameMotion{
+  animation: read-text 15s infinite;
+}
+
+@keyframes read-text {
+  0%{
+    transform: translateX(0%);
+  }
+
+  50%{
+    transform: translateX(-70%);
+  }
+
+  50.001%{
+    transform: translateX(70%);
+  }
+
+  100%{
+    transform: translateX(0%)
+  }
+}
+
 .playlist_nav {
   display: flex;
   flex-direction: column;
@@ -470,7 +493,7 @@ body {
 .live_icon{
   border-radius: 2px;
   position: absolute;
-  top: 14px;
+  top: 20px;
   left: 7px;
 }
 
