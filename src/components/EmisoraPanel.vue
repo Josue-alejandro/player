@@ -1,7 +1,7 @@
 <template>
     <div class="emisora" v-if="emisorasShow">
         <div @click="$emit('left-handler')" style="padding: '10px';">
-            <i class="material-icons" style="color: white">chevron_left</i>
+            <i class="material-icons" v-show="emisorasProgress !== 0" style="color: white">chevron_left</i>
         </div>
         <div class="emisoras_container">
             <div class="emisoras_slider" :style="{ 'transform': 'translateX(' + emisorasProgress + '%)' }">
@@ -14,7 +14,7 @@
             </div>
         </div>
         <div @click="$emit('right-handler')" style="padding: '10px';">
-            <i class="material-icons" style="color: white">chevron_right</i>
+            <i class="material-icons" style="color: white" v-show="emisorasProgress > -90">chevron_right</i>
         </div>
     </div>
 </template>
