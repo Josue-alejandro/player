@@ -126,10 +126,6 @@ import InMyBlood from '../songs/son1.mp3';
 import EmisoraDesktop from './EmisoraDesktop.vue';
 import SpinIcon from './SpinIcon.vue'
 import DefaultImage from '../../public/default.jpeg'
-import File11 from '../json/11.json'
-import File36 from '../json/36.json'
-import File13 from '../json/13.json'
-import File15 from '../json/15.json'
 
 
 
@@ -142,20 +138,20 @@ function formatDuration(durationInSeconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 
-// const obtenerDatos = async (parametro) => {
-//    try {
-//      const response = await fetch('http://localhost:3000/datos/' + parametro);
-//      if (response.ok) {
-//        const datosObtenidos = await response.json();
-//        return datosObtenidos;
-//      } else {
-//        throw new Error('Error al obtener los datos.');
-//      }
-//    } catch (error) {
-//      console.error(error);
-//      throw error;
-//    }
-//  };
+const obtenerDatos = async (parametro) => {
+    try {
+      const response = await fetch(`http://localhost:3000/radioget/${parametro}`);
+      if (response.ok) {
+        const datosObtenidos = await response.json();
+        return datosObtenidos;
+      } else {
+        throw new Error('Error al obtener los datos.');
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+};
 
 
 import MobilePlayer from './MobilePlayer.vue';
@@ -363,12 +359,13 @@ export default {
       this.canciones = []
       this.programming = emisoraEncontrada.programming
       this.currentEmisoraId = indiceEmisora
+      console.log(emisoraEncontrada)
       emisoraEncontrada.audio.forEach((val, index) => {
         this.canciones.push({
           id: index,
           nombre: emisoraEncontrada.song_name,
           autor: emisoraEncontrada.artist_name,
-          cancion: val.url,
+          cancion: val,
           imagen: emisoraEncontrada.image
         })
       });
@@ -380,56 +377,27 @@ export default {
     this.mode = this.playerMode > 0 ? 1 : 0
     this.minimizedState = this.mode === 1 ? false : true
 
-     const obtenerDatosLoop = async () => {
-       let respuestas = 0;
-       let nulos = 0;
+    const nameid = this.$route.params.nameid
+    console.log(nameid)
+    const datafromRadio = await obtenerDatos(nameid);
+    console.log(datafromRadio)
 
-       const radios = [
-        File11,
-        File36,
-        File13,
-        File15
-       ]
+    const obtenerDatosLoop = async () => {
 
-       for (let parametro = 0; parametro <= 4; parametro++) {
-         try {
-           //const datosObtenidos = await obtenerDatos(parametro);
-           const datosObtenidos = radios[parametro]
-           console.log(datosObtenidos)
-           if (datosObtenidos) {
-             if (datosObtenidos.radio.logo == "") {
-               const emisora = {
+      datafromRadio.station.forEach(station => {
+        const emisora = {
                  image: DefaultImage,
-                 selectId: datosObtenidos.id,
-                 audio: datosObtenidos.radio.audio,
-                 artist_name: datosObtenidos.radio.name,
-                 song_name: datosObtenidos.cid,
-                 programming: datosObtenidos.radio.programming
+                 selectId: station.id,
+                 audio: [station.station_links],
+                 artist_name: station.station_name,
+                 song_name: station.station_name,
+                 programming: []
                }
-               this.emisoras.push(emisora)
-             } else {
-               const emisora = {
-                 image: datosObtenidos.radio.logo,
-                 selectId: datosObtenidos.id,
-                 audio: datosObtenidos.radio.audio,
-                 artist_name: datosObtenidos.radio.defaults.artist_name,
-                 song_name: datosObtenidos.radio.defaults.song_name,
-                 programming: datosObtenidos.radio.programming
-               }
-               this.emisoras.push(emisora)
-             }
-             respuestas++
-           } else {
-             nulos++
-           }
-         } catch (error) {
-           nulos++;
-         }
-       }
 
-       console.log(`Total de respuestas positivas: ${respuestas}`);
-       console.log(`Total de respuestas nulas: ${nulos}`);
-       console.log(this.emisoras)
+        this.emisoras.push(emisora)
+      })
+
+      
      }
 
      obtenerDatosLoop();
