@@ -140,7 +140,7 @@ function formatDuration(durationInSeconds) {
 
 const obtenerDatos = async (parametro) => {
     try {
-      const response = await fetch(`http://5.161.203.214:5000//radioget/${parametro}`);
+      const response = await fetch(`http://5.161.203.214:5000/radioget/${parametro}`);
       if (response.ok) {
         const datosObtenidos = await response.json();
         return datosObtenidos;
