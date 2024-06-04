@@ -8,8 +8,8 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/:nameid', component: BottomPlayer, props: { playerMode: 0 } },
-    { path: '/ruta1:nameid', component: BottomPlayer, props: { playerMode: 1 } },
-    { path: '/ruta2:nameid', component: BottomPlayer, props: { playerMode: 2 } }
+    { path: '/ruta1/:nameid', component: BottomPlayer, props: { playerMode: 1 } },
+    { path: '/ruta2/:nameid', component: BottomPlayer, props: { playerMode: 2 } }
   ]
 })
 
