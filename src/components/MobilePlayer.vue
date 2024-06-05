@@ -256,15 +256,17 @@ export default {
       this.$emit('activeSong', data);
     },
     openNewWindow(){
-      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
+      const nameid = this.$route.params.nameid;
+      var url = `/vertical/${nameid}`; // Ruta a tu componente de ventana emergente
       var opciones = "width=300,height=550,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
     },
     openMinimizedWindow(){
-      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=300,height=550,scrollbars=yes";
+      const nameid = this.$route.params.nameid;
+      var url = `/minimal/${nameid}`; // Ruta a tu componente de ventana emergente
+      var opciones = "width=600,height=150,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);

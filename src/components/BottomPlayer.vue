@@ -66,7 +66,7 @@
         <div class="icons_div desktop_widget">
           <i class="material-icons icons_m" @click=" nextEmisora()">skip_next</i>
         </div>
-        <div class="icons_div side_border" @click=" emisorasShow = !emisorasShow; listShow = false">
+        <div class="icons_div side_border" v-if="emisorasAvaliable" @click=" emisorasShow = !emisorasShow; listShow = false">
           <i class="material-icons icons_m">radio</i>
         </div>
         <div class="song_duration desktop_widget">
@@ -194,7 +194,8 @@ export default {
           cancion: InMyBlood,
           imagen: 'https://i1.sndcdn.com/artworks-000331552113-31yptw-t500x500.jpg'
         },
-      ]
+      ],
+      emisorasAvaliable: true
     };
   },
   components: {
@@ -284,8 +285,9 @@ export default {
       }
     },
     openNewWindow(){
-      var url = "/ruta1"; // Ruta a tu componente de ventana emergente
-      var opciones = "width=300,height=550,scrollbars=yes";
+      const nameid = this.$route.params.nameid
+      var url = `/slim/${nameid}`; // Ruta a tu componente de ventana emergente
+      var opciones = "width=800,height=300,scrollbars=yes";
 
       // Abrir ventana emergente
       window.open(url, "_blank", opciones);
@@ -396,6 +398,10 @@ export default {
 
         this.emisoras.push(emisora)
       })
+
+      if (datafromRadio.station.length === 1){
+        this.emisorasAvaliable = false
+      }
 
       
      }
