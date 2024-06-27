@@ -44,7 +44,7 @@ i {
 *{
     /* Barra personalizada de firefox */
     scrollbar-width: thin;
-    scrollbar-color: red rgba(0,0,0,0);
+    scrollbar-color: rgba(255, 0, 0, 0) rgba(0,0,0,0);
 }
 
 *::selection{

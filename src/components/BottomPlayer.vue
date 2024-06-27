@@ -18,15 +18,13 @@
     <Transition name="slide-fade">
       <div class="songs_list" v-if="listShow">
         <ul>
-          <li class="song_in_the_list" v-for="cancion in canciones" :key="cancion.id">
+          <li class="song_in_the_list" v-for="(cancion, index) in currentTrackHistory" :key="index">
             <div>
               <img class="list_img" :src="cancion.imagen" :alt="cancion.nombre">
             </div>
-            <div class="song_info"
-              @click="changeSong(cancion.cancion, cancion.nombre, cancion.autor); songData.id = cancion.id">
+            <div class="song_info">
               <p class="grey-text small">{{ cancion.autor }}</p>
-              <p class="" :style=" { color: cancion.id === this.songData.id ? 'red' : 'white' } ">{{ cancion.nombre }}</p>
-              <p class="grey-text tiny">{{ cancion.tiempo }}</p>
+              <p class="" :style=" { color: cancion.nombre === cancion.nombre ? mainColor : 'white' } ">{{ cancion.nombre }}</p>
             </div>
           </li>
         </ul>
@@ -91,11 +89,13 @@
     <!-- Componente de modo vertical -->
       <MobilePlayer 
       v-if=" minimizedState === false " 
-      class="mobile_bar" 
+      class="mobile_bar"
+      :mainColor="mainColor" 
       :playerMode="playerMode"
       :mobileMode=" mobileMode "
       :programming=" programming "
-      :canciones=" canciones " 
+      :canciones=" canciones "
+      :history=" currentTrackHistory "
       :songData=" songData " 
       :duration=" duration " 
       :formattedDuration=" formattedDuration "
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import InMyBlood from '../songs/son1.mp3';
+import InMyBlood from '../songs/son1.wav';
 import EmisoraDesktop from './EmisoraDesktop.vue';
 import SpinIcon from './SpinIcon.vue'
 import DefaultImage from '../../public/default.jpeg'
@@ -140,8 +140,9 @@ function formatDuration(durationInSeconds) {
 
 const obtenerDatos = async (parametro) => {
     try {
-      const response = await fetch(`https://player-radio.inovanex.com/radioget/${parametro}`);
+      const response = await fetch(`https://player-radio-backend.inovanex.com/radioget/${parametro}`);
       if (response.ok) {
+        console.log('parametro:', response)
         const datosObtenidos = await response.json();
         return datosObtenidos;
       } else {
@@ -153,6 +154,16 @@ const obtenerDatos = async (parametro) => {
     }
 };
 
+//const getMetadata = async (url) => {
+//  try{
+//    const response = await fetch(url);
+//    if(response.ok){
+//      return response.json()
+//   }
+//  }catch (error){
+//    console.log(error)
+//  }
+//}
 
 import MobilePlayer from './MobilePlayer.vue';
 
@@ -178,6 +189,8 @@ export default {
       emisorasShow: false,
       emisoras: [],
       programming: [],
+      mainColor: 'green',
+      currentTrackHistory: [],
       songData: {
         currentSong: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
         currentAuthor: 'Kalimba',
@@ -188,8 +201,8 @@ export default {
       canciones: [
         {
           id: 1,
-          nombre: 'In My Blood',
-          autor: 'Shawn Mendes',
+          nombre: 'Loading...',
+          autor: '',
           tiempo: '3:45',
           cancion: InMyBlood,
           imagen: 'https://i1.sndcdn.com/artworks-000331552113-31yptw-t500x500.jpg'
@@ -241,7 +254,6 @@ export default {
     updateMobileVolume(volumen) {
       this.volume = volumen
       this.updateVolume();
-      console.log(this.volume)
     },
     updateProgress() {
       const audio = this.$refs.audioPlayer;
@@ -284,6 +296,16 @@ export default {
         audio.addEventListener('canplaythrough', playNewSong);
       }
     },
+    changeSongNoPlay(song, name, author, imagen) {
+      this.isLoading = true;
+      this.songData.currentAuthor = author;
+      this.songData.currentSongName = name;
+      this.songData.imagen = imagen;
+      const audio = this.$refs.audioPlayer;
+      audio.pause();
+      audio.currentTime = 0;
+      this.songData.currentSong = song;
+    },
     openNewWindow(){
       const nameid = this.$route.params.nameid
       var url = `/slim/${nameid}`; // Ruta a tu componente de ventana emergente
@@ -298,7 +320,6 @@ export default {
 
       if (siguienteIndex < this.canciones.length) {
         const siguienteCancion = this.canciones[siguienteIndex];
-        console.log(siguienteCancion)
         this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
         this.songData.id = siguienteCancion.id
         // Aquí puedes hacer lo que necesites con el objeto de la siguiente canción
@@ -306,7 +327,6 @@ export default {
         // Si no hay siguiente canción, puedes hacer alguna otra acción, como volver al inicio del array
         // Por ejemplo, puedes acceder a la primera canción así:
         const siguienteCancion = this.canciones[0];
-        console.log(siguienteCancion)
         this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
       }
     },
@@ -316,7 +336,6 @@ export default {
 
       if (siguienteIndex < this.canciones.length) {
         const siguienteCancion = this.canciones[siguienteIndex];
-        console.log(siguienteCancion)
         this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
         this.songData.id = siguienteCancion.id
         // Aquí puedes hacer lo que necesites con el objeto de la siguiente canción
@@ -324,7 +343,6 @@ export default {
         // Si no hay siguiente canción, puedes hacer alguna otra acción, como volver al inicio del array
         // Por ejemplo, puedes acceder a la primera canción así:
         const siguienteCancion = this.canciones[0];
-        console.log(siguienteCancion)
         this.changeSong(siguienteCancion.cancion, siguienteCancion.nombre, siguienteCancion.autor, siguienteCancion.imagen)
       }
     },
@@ -361,7 +379,7 @@ export default {
       this.canciones = []
       this.programming = emisoraEncontrada.programming
       this.currentEmisoraId = indiceEmisora
-      console.log(emisoraEncontrada)
+      this.currentTrackHistory = emisoraEncontrada.history
       emisoraEncontrada.audio.forEach((val, index) => {
         this.canciones.push({
           id: index,
@@ -371,7 +389,6 @@ export default {
           imagen: emisoraEncontrada.image
         })
       });
-      console.log(this.currentEmisoraId)
       this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
     }
   },
@@ -380,50 +397,94 @@ export default {
     this.minimizedState = this.mode === 1 ? false : true
 
     const nameid = this.$route.params.nameid
-    console.log(nameid)
     const datafromRadio = await obtenerDatos(nameid);
-    console.log(datafromRadio)
+    this.isLoading = true
 
     const obtenerDatosLoop = async () => {
 
-      datafromRadio.station.forEach(station => {
-        const emisora = {
-                 image: DefaultImage,
+      const stationLenght = datafromRadio.station.length; // cantidad de radios
+      let currentStation = 0;
+
+      datafromRadio.station.forEach( async station => {
+
+        if(station.metadata !== ''){
+
+          const metadataLink = station.metadata.split(',')
+
+
+          fetch(metadataLink[0]).then(response => {
+            if(response.ok){
+              return response.json()
+            }
+          }).then(response => {
+
+            let history = [];
+            let proData = [];
+
+            response.trackhistory.forEach((track, index) => {
+              const result = track.split(' - ')
+              const register = {
+                nombre: result[0],
+                autor: result[1],
+                imagen: response.covers[index]
+              }
+              history.push(register)
+            })
+
+            if(station.programming){
+              proData = station.programming
+            }
+
+            const audioLinks = station.station_links.split(',')
+
+            const emisora = {
+                 image: response.coverart,
                  selectId: station.id,
-                 audio: [station.station_links],
+                 audio: [audioLinks[0]],
                  artist_name: station.station_name,
-                 song_name: station.station_name,
-                 programming: []
+                 song_name: response.nowplaying,
+                 history: history,
+                 programming: proData
                }
 
-        this.emisoras.push(emisora)
+
+            this.emisoras.push(emisora)
+            console.log(DefaultImage)
+
+            currentStation++
+            if(currentStation === stationLenght){
+              this.changeSongNoPlay(audioLinks[0], response.nowplaying, station.station_name, response.coverart)
+              this.isPlaying = false
+              this.isLoading = false
+            }
+          })
+
+        }
+
       })
 
       if (datafromRadio.station.length === 1){
         this.emisorasAvaliable = false
       }
-
       
      }
 
-     obtenerDatosLoop();
-
+    await obtenerDatosLoop();
 
     this.songData.currentSong = this.canciones[0].cancion
-    this.songData.imagen = this.canciones[0].imagen
+    this.songData.imagen = DefaultImage
     this.songData.id = this.canciones[0].id
     this.songData.currentAuthor = this.canciones[0].autor
     this.songData.currentSongName = this.canciones[0].nombre
     const audio = this.$refs.audioPlayer;
 
-    this.nextEmisora()
+    //this.nextEmisora()
 
     audio.addEventListener('loadedmetadata', () => {
       //const totalSeconds = Math.round(audio.duration);
       //this.formattedDuration = formatDuration(totalSeconds);
     });
     this.progressInterval = setInterval(this.updateProgress, 1000); // Actualizar cada segundo
-    this.isLoading = false
   },
   beforeUnmount() {
     clearInterval(this.progressInterval);

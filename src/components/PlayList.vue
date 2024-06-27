@@ -2,17 +2,15 @@
 <ul class="playlist">
     <li 
     class="song_in_the_list" 
-    v-for="cancion in canciones" 
-    :key="cancion.id" 
-    @click="$emit('play-song' ,cancion.cancion, cancion.nombre, cancion.autor, cancion.id, cancion.imagen )"
-    :style="{ backgroundColor: cancion.id === this.songData.id ? 'rgba(300,50,50, 0.5)' : 'rgba(20, 20, 20, 0.7)' }">
+    v-for="(register, index) in history" 
+    :key="index" 
+    >
     <div>
-        <img class="list_img" :src="cancion.imagen" :alt="cancion.nombre">
+        <img class="list_img" :src="register.imagen" :alt="register.nombre">
     </div>
     <div class="song_info">
-        <p class="small" :style="{ color: cancion.id === this.songData.id ? 'white' : 'grey' }">{{ cancion.autor }}</p>
-        <p class="" :style="{ color: cancion.id === this.songData.id ? 'white' : 'white' }">{{ cancion.nombre }}</p>
-        <p class="tiny" :style="{ color: cancion.id === this.songData.id ? 'white' : 'grey' }">{{ cancion.tiempo }}</p>
+        <p class="small" :style="{ color: register.nombre !== register.nombre ? 'white' : 'grey' }">{{ register.autor }}</p>
+        <p class="" :style="{ color: register.nombre === register.nombre ? 'white' : 'white' }">{{ register.nombre }}</p>
     </div>
     </li>
 </ul>
@@ -22,8 +20,8 @@
 
 export default {
     props:{
-        canciones:{
-            required: true,
+        history: {
+          required: false
         },
         songData: {
             required: true

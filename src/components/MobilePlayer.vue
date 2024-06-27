@@ -52,13 +52,13 @@
           </div>
           <div class="cover cover_back">
             <img :src="songData.imagen" class="cover cover_image" ref="image" @load="playAnimation">
-            <span class="brand">IRADIODEMO</span>
+            <span class="brand" :style="{color: mainColor}">IRADIODEMO</span>
             <span class="down_brand">Radio en HD, 24 horas en VIVO</span>
           </div>
           <div>
             <div class="song_duration">
               <span style="font-size: 12px;">{{ formattedDuration }}</span>
-              <input :value="barTime" type="range" class="progress_bar" id="progress-bar" min="0" :max="duration" />
+              <input :value="barTime" type="range" :style="{'scrollbar-color': mainColor}" class="progress_bar" id="progress-bar" min="0" :max="duration" />
             </div>
           </div>
         </div>
@@ -105,14 +105,14 @@
               <div class="playlist_options">
 
                 <div class="options" @click="optionActive = 0"
-                  :style="{ borderBottom: optionActive === 0 ? '3px solid red' : '3px solid rgba(0,0,0,0)' }">
+                  :style="{ borderBottom: optionActive === 0 ? `3px solid ${mainColor}` : '3px solid rgba(0,0,0,0)' }">
                   <div class="icons_nav">
                     <i class="material-icons icons_m">fast_rewind</i>
                   </div>
                   <p>Anteriores</p>
                 </div>
                 <div class="options" @click="optionActive = 1"
-                  :style="{ borderBottom: optionActive === 1 ? '3px solid red' : '3px solid rgba(0,0,0,0)' }">
+                  :style="{ borderBottom: optionActive === 1 ? `3px solid ${mainColor}` : '3px solid rgba(0,0,0,0)' }">
                   <div class="icons_nav">
                     <i class="material-icons icons_m">mic_none</i>
                   </div>
@@ -122,8 +122,9 @@
               </div>
             </div>
             <div class="menu" :style="{ transform: optionActive === 0 ? 'translateX(0px)' : 'translateX(-100vw)' }">
-              <PlayList @play-song="playSong" :canciones="canciones" :songData="songData"></PlayList>
+              <PlayList @play-song="playSong" :history="history" :songData="songData"></PlayList>
               <ProgrammingList 
+              :mainColor="mainColor"
               :day="currentDay"
               :programmingShow="programmingShow" 
               @change-day="dayHandler"></ProgrammingList>
@@ -166,6 +167,9 @@ export default {
     isLoading:{
       required: true
     },
+    mainColor: {
+      required: true
+    },
     playerMode:{
       required: true
     },
@@ -175,6 +179,10 @@ export default {
     canciones: {
       type: Array,
       required: true
+    },
+    history: {
+      type: Array,
+      required: false
     },
     volumen: {
       required: true
@@ -593,6 +601,15 @@ body {
   .play_button{
     width: 58px;
     height: 58px;
+  }
+}
+
+@media (max-width: 380px) {
+  .play_button{
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+    border: 0px solid black;
   }
 }
 

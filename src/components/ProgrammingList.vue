@@ -1,6 +1,6 @@
 <template>
     <div class="programming_list">
-        <div class="week_div">
+        <div class="week_div" :style="{'background-color': mainColor, 'opacity': '0.6'}">
           <div
           v-for="day in days"
           :key="day.index" 
@@ -36,7 +36,7 @@ export default {
             days:['lun', 'mar', 'mier', 'jue', 'vie', 'sab', 'dom']
         }
     },
-    props:['day', 'programmingShow'],
+    props:['day', 'programmingShow', 'mainColor'],
     methods:{
         dayHandler(day){
             this.currentDay = day
