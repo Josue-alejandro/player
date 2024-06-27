@@ -140,7 +140,8 @@ function formatDuration(durationInSeconds) {
 
 const obtenerDatos = async (parametro) => {
     try {
-      const response = await fetch(`https://player-radio-backend.inovanex.com/radioget/${parametro}`);
+      const url = `https://player-radio-backend.inovanex.com/radioget/${parametro}`;
+      const response = await fetch(url);
       if (response.ok) {
         console.log('parametro:', response)
         const datosObtenidos = await response.json();
@@ -390,6 +391,25 @@ export default {
         })
       });
       this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
+    },
+    selectEmisoraNoPlay(id) {
+      this.emisoraSelected = id
+      //buscar emisora seleccionada
+      const emisoraEncontrada = this.emisoras.find(val => val.selectId == id)
+      const indiceEmisora = this.emisoras.findIndex(val => val.selectId == id)
+      this.canciones = []
+      this.programming = emisoraEncontrada.programming
+      this.currentEmisoraId = indiceEmisora
+      this.currentTrackHistory = emisoraEncontrada.history
+      emisoraEncontrada.audio.forEach((val, index) => {
+        this.canciones.push({
+          id: index,
+          nombre: emisoraEncontrada.song_name,
+          autor: emisoraEncontrada.artist_name,
+          cancion: val,
+          imagen: emisoraEncontrada.image
+        })
+      });
     }
   },
   async mounted() {
@@ -399,6 +419,7 @@ export default {
     const nameid = this.$route.params.nameid
     const datafromRadio = await obtenerDatos(nameid);
     this.isLoading = true
+    this.mainColor = datafromRadio.config[0].color
 
     const obtenerDatosLoop = async () => {
 
@@ -453,6 +474,7 @@ export default {
 
             currentStation++
             if(currentStation === stationLenght){
+              this.selectEmisoraNoPlay(station.id)
               this.changeSongNoPlay(audioLinks[0], response.nowplaying, station.station_name, response.coverart)
               this.isPlaying = false
               this.isLoading = false
