@@ -78,7 +78,7 @@
           </div>
           <div class="controllers_div">
             <div class="icons_div">
-              <i class="material-icons icons_m" @click="$emit('previous-song')">skip_previous</i>
+              <i class="material-icons icons_m" v-show="emisorasAvaliable" @click="$emit('previous-song')">skip_previous</i>
             </div>
             <div class="play_button" @click="$emit('playSong')" style="background-color: rgba(0, 0, 0, 0);">
               <Transition name="change">
@@ -88,7 +88,7 @@
               </Transition>
             </div>
             <div class="icons_div">
-              <i class="material-icons icons_m" @click="$emit('next-song')">skip_next</i>
+              <i class="material-icons icons_m" v-show="emisorasAvaliable" @click="$emit('next-song')">skip_next</i>
             </div>
           </div>
           <div class="icons_div side_border">
