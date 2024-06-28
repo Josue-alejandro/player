@@ -142,8 +142,8 @@ function formatDuration(durationInSeconds) {
 
 const obtenerDatos = async (parametro) => {
     try {
-      //const url = `https://player-radio-backend.inovanex.com/radioget/${parametro}`;
-      const url = `http://localhost:3000/radioget/${parametro}`;
+      const url = `https://player-radio-backend.inovanex.com/radioget/${parametro}`;
+      //const url = `http://localhost:3000/radioget/${parametro}`;
 
       const response = await fetch(url);
       if (response.ok) {
