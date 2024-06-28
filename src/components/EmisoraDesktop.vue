@@ -36,7 +36,7 @@ export default {
   border-radius: 30px;
   position: fixed;
   bottom: 90px;
-  left: 375px;
+  left: 39%;
 }
 .emisoras_slider{
   flex-direction: row;
@@ -81,6 +81,7 @@ export default {
     margin: 0px 5px 0px 5px;
   }
 }
+
 
 
 </style>

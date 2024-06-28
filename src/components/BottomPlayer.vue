@@ -8,7 +8,7 @@
         :emisoraSelected="emisoraSelected"></EmisoraDesktop>
     </Transition>
     <Transition name="slide-fade">
-      <i class="material-icons" v-if="emisorasShow" style="position: fixed; font-size: 50px; color: #000; bottom: 61px; left: 484px;">arrow_drop_down</i>
+      <i class="material-icons drop_down" v-if="emisorasShow" style="position: fixed; font-size: 50px; color: #000; bottom: 61px;">arrow_drop_down</i>
     </Transition>
     <Transition name="slide-fade2">
       <div class="slider-container" v-if="volumeShow">
@@ -23,8 +23,8 @@
               <img class="list_img" :src="cancion.imagen" :alt="cancion.nombre">
             </div>
             <div class="song_info">
-              <p class="grey-text small">{{ cancion.autor }}</p>
-              <p class="" :style=" { color: cancion.nombre === cancion.nombre ? mainColor : 'white' } ">{{ cancion.nombre }}</p>
+              <p class="grey-text small">{{ cancion.autor.length > 25 ? cancion.autor.substring(0, 25) + '...' : cancion.autor }}</p>
+              <p class="" :style=" { color: cancion.nombre === cancion.nombre ? mainColor : 'white' } ">{{ cancion.nombre.substring(0, 29) }}</p>
             </div>
           </li>
         </ul>
@@ -43,10 +43,10 @@
       </div>
       <div class="song_name">
         <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
-          <span class="radio_text">
-            IRADIODEMO
+          <span class="radio_text" :style="{color: mainColor}">
+            {{ currentStationName }}
           </span>
-          <span style="color: white; background-color: red; border-radius: 5px; font-size: 9px; padding: 0px 4px; margin-left: 3px;">
+          <span class="liveSquare" :style="{backgroundColor: mainColor}">
             EN VIVO
           </span>
         </div>
@@ -90,6 +90,8 @@
       <MobilePlayer 
       v-if=" minimizedState === false " 
       class="mobile_bar"
+      :emisorasAvaliable="emisorasAvaliable"
+      :currentStationName="currentStationName"
       :mainColor="mainColor" 
       :playerMode="playerMode"
       :mobileMode=" mobileMode "
@@ -140,7 +142,9 @@ function formatDuration(durationInSeconds) {
 
 const obtenerDatos = async (parametro) => {
     try {
-      const url = `https://player-radio-backend.inovanex.com/radioget/${parametro}`;
+      //const url = `https://player-radio-backend.inovanex.com/radioget/${parametro}`;
+      const url = `http://localhost:3000/radioget/${parametro}`;
+
       const response = await fetch(url);
       if (response.ok) {
         console.log('parametro:', response)
@@ -181,6 +185,7 @@ export default {
       volume: 50,
       duration: 100,
       currentTime: 50,
+      currentStationName: 'Cargando...',
       progressInterval: null,
       formattedDuration: '00:00',
       listShow: false,
@@ -381,6 +386,8 @@ export default {
       this.programming = emisoraEncontrada.programming
       this.currentEmisoraId = indiceEmisora
       this.currentTrackHistory = emisoraEncontrada.history
+      this.currentStationName = emisoraEncontrada.station_name
+      console.log(emisoraEncontrada)
       emisoraEncontrada.audio.forEach((val, index) => {
         this.canciones.push({
           id: index,
@@ -442,6 +449,8 @@ export default {
             let history = [];
             let proData = [];
 
+            console.log('estacion:', station)
+
             response.trackhistory.forEach((track, index) => {
               const result = track.split(' - ')
               const register = {
@@ -456,14 +465,16 @@ export default {
               proData = station.programming
             }
 
+            const songDetails = response.nowplaying.split(' - ')
             const audioLinks = station.station_links.split(',')
 
             const emisora = {
+                 station_name: station.station_name,
                  image: response.coverart,
                  selectId: station.id,
                  audio: [audioLinks[0]],
-                 artist_name: station.station_name,
-                 song_name: response.nowplaying,
+                 artist_name: songDetails[0],
+                 song_name: songDetails[1],
                  history: history,
                  programming: proData
                }
@@ -475,7 +486,8 @@ export default {
             currentStation++
             if(currentStation === stationLenght){
               this.selectEmisoraNoPlay(station.id)
-              this.changeSongNoPlay(audioLinks[0], response.nowplaying, station.station_name, response.coverart)
+              this.currentStationName = station.station_name
+              this.changeSongNoPlay(audioLinks[0], songDetails[1], songDetails[0], response.coverart)
               this.isPlaying = false
               this.isLoading = false
             }
@@ -536,9 +548,13 @@ export default {
   min-width: 900px;
 }
 
-@media (min-width: 1300px) {
+.drop_down{
+  left: 43%
+}
+
+@media (min-width: 1200px) {
   .widgets_section{
-    min-width: 1600px;
+    min-width: 1000px;
   }
 }
 
@@ -569,12 +585,13 @@ export default {
 .play_button {
   color: white;
   font-size: 17px;
-  width: 70px;
+  width: 100px;
   border-right: 1px solid rgba(100, 100, 100, 0.3);
   display: flex;
   flex-direction: row;
   justify-content: center;
   cursor: pointer;
+  margin-right: 15px;
 }
 
 .side_border {
@@ -611,7 +628,7 @@ export default {
 
 .song_name {
   color: rgba(200, 200, 200, 0.6);
-  width: 200px;
+  width: auto;
   align-items: center;
   font-size: 12px;
   display: flex;
@@ -629,11 +646,15 @@ export default {
     transform: translateX(0%);
   }
 
-  50%{
+  30%{
+    transform: translateX(0%);
+  }
+
+  40%{
     transform: translateX(-70%);
   }
 
-  50.001%{
+  40.001%{
     transform: translateX(70%);
   }
 
@@ -658,7 +679,7 @@ export default {
   padding: 0px 0px 0px 10px;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 2100px) {
   .progress_bar{
     width: 70%;
   }
@@ -689,10 +710,14 @@ export default {
   height: 300px;
   padding: 1em;
   font-size: 12px;
-  overflow-x: scroll;
   position: fixed;
   bottom: 90px;
   right: 100px;
+}
+
+.songs_list ul{
+  overflow: scroll;
+  max-height: 285px;
 }
 
 @media (max-width: 930px) {
@@ -1108,6 +1133,16 @@ input[type="range"]::-webkit-slider-runnable-track {
   .openNew_div{
     height: 28px;
   }
+}
+
+.liveSquare{
+  border: 1px solid rgba(0, 0, 0, 0);
+  color: white; 
+  background-color: red; 
+  border-radius: 5px; 
+  font-size: 9px; 
+  padding: 0px 4px; 
+  margin-left: 3px
 }
 
 </style>

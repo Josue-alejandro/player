@@ -40,6 +40,7 @@ export default {
   bottom: 0px;
   left: 0px;
   margin-top: 0em;
+  min-width: 250px;
 }
 
 .emisoras_slider{

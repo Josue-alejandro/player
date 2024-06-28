@@ -16,11 +16,11 @@
         <img width="25" height="25" class="live_icon" src="https://seeklogo.com/images/Y/youtube-live-logo-43F98BDB4C-seeklogo.com.png">
         <img :src="songData.imagen" style="border-radius: 6px; margin-left: 5px;" width="80" height="80" />
         <div class="title">
-          <p>EN VIVO</p>
+          <p :style="{backgroundColor: mainColor}">EN VIVO</p>
           <span class="nameMotion" style="font-size: 16px; font-weight: bold; min-width: 400px">{{ songData.currentAuthor }}</span>
           <span style="font-size: 12px;">{{ songData.currentSongName }}</span>
         </div>
-        <div class="play_button" @click="$emit('playSong')">
+        <div class="play_button_minimal" @click="$emit('playSong')">
           <Transition name="change">
             <i class="material-icons play_icon" style="position: absolute;" v-if=" !isPlaying && isLoading === false ">play_arrow</i>
             <i class="material-icons play_icon" style="position: absolute; transform: scaleX(0.9);" v-else-if=" isPlaying && isLoading === false ">pause</i>
@@ -52,7 +52,7 @@
           </div>
           <div class="cover cover_back">
             <img :src="songData.imagen" class="cover cover_image" ref="image" @load="playAnimation">
-            <span class="brand" :style="{color: mainColor}">IRADIODEMO</span>
+            <span class="brand" :style="{color: mainColor}">{{ currentStationName }}</span>
             <span class="down_brand">Radio en HD, 24 horas en VIVO</span>
           </div>
           <div>
@@ -92,7 +92,7 @@
             </div>
           </div>
           <div class="icons_div side_border">
-            <i class="material-icons icons_m" @click="emisorasShow = !emisorasShow">radio</i>
+            <i class="material-icons icons_m" v-if="emisorasAvaliable" @click="emisorasShow = !emisorasShow">radio</i>
           </div>
         </div>
         <div>
@@ -170,6 +170,9 @@ export default {
     mainColor: {
       required: true
     },
+    currentStationName:{
+      required: true
+    },
     playerMode:{
       required: true
     },
@@ -213,6 +216,9 @@ export default {
       required: true
     },
     programming: {
+      required: true
+    },
+    emisorasAvaliable:{
       required: true
     }
   },
@@ -584,6 +590,19 @@ body {
   align-items: center;
 }
 
+.play_button_minimal {
+  border: 2px solid white;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 65px;
+  height: 65px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
 .play_button {
   border: 2px solid white;
   border-radius: 100%;
@@ -605,10 +624,10 @@ body {
 }
 
 @media (max-width: 380px) {
-  .play_button{
+  .play_button_minimal{
     width: 48px;
     height: 48px;
-    border-radius: 2px;
+    border-radius: 40px;
     border: 0px solid black;
   }
 }
