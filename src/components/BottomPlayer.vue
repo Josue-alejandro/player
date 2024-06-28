@@ -59,10 +59,10 @@
           <img :src="songData.imagen" width="70">
         </div>
         <div class="icons_div desktop_widget" >
-          <i class="material-icons icons_m" @click=" previousEmisora()">skip_previous</i>
+          <i class="material-icons icons_m" v-show="emisorasAvaliable" @click=" previousEmisora()">skip_previous</i>
         </div>
         <div class="icons_div desktop_widget">
-          <i class="material-icons icons_m" @click=" nextEmisora()">skip_next</i>
+          <i class="material-icons icons_m" v-show="emisorasAvaliable" @click=" nextEmisora()">skip_next</i>
         </div>
         <div class="icons_div side_border" v-if="emisorasAvaliable" @click=" emisorasShow = !emisorasShow; listShow = false">
           <i class="material-icons icons_m">radio</i>
