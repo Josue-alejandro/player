@@ -1,11 +1,17 @@
 <template>
-  <div>
+  <div :style="{fontFamily: 'cursive'}">
     <audio ref="audioPlayer" :volume="volume / 100" @timeupdate="timeUpdate" :src="songData.currentSong">
     </audio>
     <Transition name="slide-fade2">
-      <EmisoraDesktop @left-handler="leftHandler" @right-handler="rightHandler" @select-emisora="selectEmisora"
-        :emisorasShow="emisorasShow" :emisorasProgress="emisorasProgress" :emisoras="emisoras"
-        :emisoraSelected="emisoraSelected"></EmisoraDesktop>
+      <EmisoraDesktop 
+      @left-handler="leftHandler" 
+      @right-handler="rightHandler" 
+      @select-emisora="selectEmisora"
+      :emisorasShow="emisorasShow" 
+      :emisorasProgress="emisorasProgress" 
+      :emisoras="emisoras"
+      :emisoraSelected="emisoraSelected"
+      :fontTheme="fontTheme"></EmisoraDesktop>
     </Transition>
     <Transition name="slide-fade">
       <i class="material-icons drop_down" v-if="emisorasShow" style="position: fixed; font-size: 50px; color: #000; bottom: 61px;">arrow_drop_down</i>
@@ -23,8 +29,8 @@
               <img class="list_img" :src="cancion.imagen" :alt="cancion.nombre">
             </div>
             <div class="song_info">
-              <p class="grey-text small">{{ cancion.autor.length > 25 ? cancion.autor.substring(0, 25) + '...' : cancion.autor }}</p>
-              <p class="" :style=" { color: cancion.nombre === cancion.nombre ? mainColor : 'white' } ">{{ cancion.nombre.substring(0, 29) }}</p>
+              <p class="grey-text small" :style="{fontFamily: fontTheme}">{{ cancion.autor.length > 25 ? cancion.autor.substring(0, 25) + '...' : cancion.autor }}</p>
+              <p class="" :style=" { color: cancion.nombre === cancion.nombre ? mainColor : 'white', fontFamily: fontTheme } ">{{ cancion.nombre.substring(0, 29) }}</p>
             </div>
           </li>
         </ul>
@@ -43,14 +49,14 @@
       </div>
       <div class="song_name">
         <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
-          <span class="radio_text" :style="{color: mainColor}">
+          <span class="radio_text" :style="{color: mainColor, fontFamily: fontTheme}">
             {{ currentStationName }}
           </span>
-          <span class="liveSquare" :style="{backgroundColor: mainColor}">
+          <span class="liveSquare" :style="{backgroundColor: mainColor, fontFamily: fontTheme}">
             EN VIVO
           </span>
         </div>
-        <span style="width: 500px; text-align: left;" class="nameMotion">
+        <span :style="{width: '500px', textAlign: 'left', fontFamily: fontTheme}" class="nameMotion">
           {{ songData.currentAuthor }} - {{ songData.currentSongName }}
         </span>
       </div>
@@ -68,7 +74,7 @@
           <i class="material-icons icons_m">radio</i>
         </div>
         <div class="song_duration desktop_widget">
-          <span>{{ formattedDuration }}</span>
+          <span :style="{fontFamily: fontTheme}">{{ formattedDuration }}</span>
         </div>
         <div class="progress_bar desktop_widget">
           <input v-model="currentTime" type="range" id="progress-bar" min="0" :max="duration"
@@ -90,6 +96,7 @@
       <MobilePlayer 
       v-if=" minimizedState === false " 
       class="mobile_bar"
+      :fontTheme="fontTheme"
       :emisorasAvaliable="emisorasAvaliable"
       :currentStationName="currentStationName"
       :mainColor="mainColor" 
@@ -182,6 +189,7 @@ export default {
       isPlaying: false,
       isLoading: false,
       currentEmisoraId: 0,
+      fontTheme: 'Arial, sans-serif',
       volume: 50,
       duration: 100,
       currentTime: 50,
@@ -233,7 +241,7 @@ export default {
         this.emisorasProgress = this.emisorasProgress + 10
       }
     },
-    playHandle() {
+    playHandle () {
       const audio = this.$refs.audioPlayer;
 
       if (this.isPlaying) {
@@ -287,7 +295,11 @@ export default {
       this.songData.currentSong = song;
 
       const playNewSong = () => {
-        audio.play(); // Reproducir la nueva canción automáticamente una vez cargada
+        try{
+          audio.play(); // Reproducir la nueva canción automáticamente una vez cargada
+        }catch(error){
+          console.log(error)
+        }
         this.isPlaying = true;
         this.isLoading = false;
         audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
@@ -387,7 +399,7 @@ export default {
       this.currentEmisoraId = indiceEmisora
       this.currentTrackHistory = emisoraEncontrada.history
       this.currentStationName = emisoraEncontrada.station_name
-      console.log(emisoraEncontrada)
+      console.log('emisora:', emisoraEncontrada)
       emisoraEncontrada.audio.forEach((val, index) => {
         this.canciones.push({
           id: index,
@@ -397,7 +409,9 @@ export default {
           imagen: emisoraEncontrada.image
         })
       });
+
       this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
+
     },
     selectEmisoraNoPlay(id) {
       this.emisoraSelected = id
@@ -439,17 +453,18 @@ export default {
 
           const metadataLink = station.metadata.split(',')
 
-
-          fetch(metadataLink[0]).then(response => {
+          await fetch(metadataLink[0]).then(response => {
             if(response.ok){
               return response.json()
             }
           }).then(response => {
+          
 
-            let history = [];
+            // Verifica que hay metadata
+            if(response.status){
+              console.log('hay metadata')
+              let history = [];
             let proData = [];
-
-            console.log('estacion:', station)
 
             response.trackhistory.forEach((track, index) => {
               const result = track.split(' - ')
@@ -467,22 +482,40 @@ export default {
 
             const songDetails = response.nowplaying.split(' - ')
             const audioLinks = station.station_links.split(',')
+            const reverseAudioLinks = audioLinks.reverse()
 
-            const emisora = {
-                 station_name: station.station_name,
-                 image: response.coverart,
-                 selectId: station.id,
-                 audio: [audioLinks[0]],
-                 artist_name: songDetails[0],
-                 song_name: songDetails[1],
-                 history: history,
-                 programming: proData
-               }
+            // Objeto de emisora a agregar a la lista
+            let emisora = {
+              station_name: station.station_name,
+              image: response.coverart,
+              selectId: station.id,
+              audio: [],
+              artist_name: songDetails[0],
+              song_name: songDetails[1],
+              history: history,
+              programming: proData
+            }
 
+            if(reverseAudioLinks.length > 1){
+              reverseAudioLinks.forEach( async (val) => {
+              await fetch(val, {mode: 'no-cors'}).then(r=>{
+                console.log(val);
+                console.log(r)
+                emisora.audio.unshift(val)
+              })
+              .catch(e=>{
+                console.log(e)
+                console.log(val)
+                emisora.audio.push(val)
+              });
+            })
 
+            }else{
+              emisora.audio = reverseAudioLinks
+            }
+            
             this.emisoras.push(emisora)
-            console.log(DefaultImage)
-
+            
             currentStation++
             if(currentStation === stationLenght){
               this.selectEmisoraNoPlay(station.id)
@@ -491,8 +524,63 @@ export default {
               this.isPlaying = false
               this.isLoading = false
             }
+            }else{
+              console.log('no hay metadata')
+              let proData = []
+              if(station.programming){
+                proData = station.programming
+              }
+
+              // Objeto de emisora a agregar a la lista
+              let emisora = {
+                station_name: station.station_name,
+                image: DefaultImage,
+                selectId: station.id,
+                audio: [],
+                artist_name: station.station_name,
+                song_name: station.slogan,
+                history: history,
+                programming: proData
+              }
+
+              const audioLinks = station.station_links.split(',')
+              const reverseAudioLinks = audioLinks.reverse()
+
+              if(reverseAudioLinks.length > 1){
+                reverseAudioLinks.forEach( async (val) => {
+                  await fetch(val, {mode: 'no-cors'}).then(r=>{
+                    console.log(val);
+                    console.log(r)
+                    emisora.audio.unshift(val)
+                  })
+                  .catch(e=>{
+                    console.log(val)
+                    console.log(e)
+                    emisora.audio.push(val)
+                  });
+                })
+
+              }else{
+                emisora.audio = reverseAudioLinks
+              }
+
+              this.emisoras.push(emisora)
+              
+              currentStation++
+              
+              if(currentStation === stationLenght){
+                this.selectEmisoraNoPlay(station.id)
+                this.currentStationName = station.station_name
+                this.changeSongNoPlay(audioLinks[0], '', '', DefaultImage)
+                this.isPlaying = false
+                this.isLoading = false
+              }
+
+            }
+
           })
 
+        
         }
 
       })
@@ -504,6 +592,8 @@ export default {
      }
 
     await obtenerDatosLoop();
+
+    this.canciones
 
     this.songData.currentSong = this.canciones[0].cancion
     this.songData.imagen = DefaultImage
@@ -554,13 +644,13 @@ export default {
 
 @media (min-width: 1200px) {
   .widgets_section{
-    min-width: 1000px;
+    min-width: 70vw;
   }
 }
 
 @media (max-width: 1070px) {
   .widgets_section{
-    min-width: 720px;
+    min-width: 60vw;
   }
 }
 
@@ -902,6 +992,7 @@ export default {
 
 .emisoraImg {
   transition: transform 0.2s;
+  cursor: pointer;
 }
 
 /* transicion al modo vertical, (eliminada por el momento) */

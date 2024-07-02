@@ -20,7 +20,7 @@
 
 <script>
 export default {
-    props: ['emisorasShow', 'emisorasProgress', 'emisoras', 'emisoraSelected']
+    props: ['emisorasShow', 'emisorasProgress', 'emisoras', 'emisoraSelected', 'fontTheme']
 }
 </script>
 
@@ -58,6 +58,7 @@ export default {
 .emisora_img {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {

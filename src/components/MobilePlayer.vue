@@ -16,9 +16,9 @@
         <img width="25" height="25" class="live_icon" src="https://seeklogo.com/images/Y/youtube-live-logo-43F98BDB4C-seeklogo.com.png">
         <img :src="songData.imagen" style="border-radius: 6px; margin-left: 5px;" width="80" height="80" />
         <div class="title">
-          <p :style="{backgroundColor: mainColor}">EN VIVO</p>
-          <span class="nameMotion" style="font-size: 16px; font-weight: bold; min-width: 400px">{{ songData.currentAuthor }}</span>
-          <span style="font-size: 12px;">{{ songData.currentSongName }}</span>
+          <p :style="{backgroundColor: mainColor, fontFamily: fontTheme}">EN VIVO</p>
+          <span class="nameMotion" :style="{fontSize: '16px', fontWeight: 'bold', minWidth: '400px', fontFamily: fontTheme}">{{ songData.currentAuthor }}</span>
+          <span :style="{fontSize: '12px', fontFamily: fontTheme}">{{ songData.currentSongName }}</span>
         </div>
         <div class="play_button_minimal" @click="$emit('playSong')">
           <Transition name="change">
@@ -52,12 +52,12 @@
           </div>
           <div class="cover cover_back">
             <img :src="songData.imagen" class="cover cover_image" ref="image" @load="playAnimation">
-            <span class="brand" :style="{color: mainColor}">{{ currentStationName }}</span>
-            <span class="down_brand">Radio en HD, 24 horas en VIVO</span>
+            <span class="brand" :style="{color: mainColor, fontFamily: fontTheme}">{{ currentStationName }}</span>
+            <span class="down_brand" :style="{fontFamily: fontTheme}">{{ songData.currentAuthor }} - {{ songData.currentSongName }}</span>
           </div>
           <div>
             <div class="song_duration">
-              <span style="font-size: 12px;">{{ formattedDuration }}</span>
+              <span :style="{fontSize: '12px', fontFamily: fontTheme}">{{ formattedDuration }}</span>
               <input :value="barTime" type="range" :style="{'scrollbar-color': mainColor}" class="progress_bar" id="progress-bar" min="0" :max="duration" />
             </div>
           </div>
@@ -109,21 +109,26 @@
                   <div class="icons_nav">
                     <i class="material-icons icons_m">fast_rewind</i>
                   </div>
-                  <p>Anteriores</p>
+                  <p :style="{fontFamily: fontTheme}">Anteriores</p>
                 </div>
                 <div class="options" @click="optionActive = 1"
                   :style="{ borderBottom: optionActive === 1 ? `3px solid ${mainColor}` : '3px solid rgba(0,0,0,0)' }">
                   <div class="icons_nav">
                     <i class="material-icons icons_m">mic_none</i>
                   </div>
-                  <p>Programacion</p>
+                  <p :style="{fontFamily: fontTheme}">Programacion</p>
                 </div>
 
               </div>
             </div>
             <div class="menu" :style="{ transform: optionActive === 0 ? 'translateX(0px)' : 'translateX(-100vw)' }">
-              <PlayList @play-song="playSong" :history="history" :songData="songData"></PlayList>
+              <PlayList 
+              @play-song="playSong"
+              :fontTheme="fontTheme"
+              :history="history" 
+              :songData="songData"></PlayList>
               <ProgrammingList 
+              :fontTheme="fontTheme"
               :mainColor="mainColor"
               :day="currentDay"
               :programmingShow="programmingShow" 
@@ -220,6 +225,9 @@ export default {
     },
     emisorasAvaliable:{
       required: true
+    },
+    fontTheme: {
+      required: false
     }
   },
   watch:{

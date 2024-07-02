@@ -9,8 +9,8 @@
         <img class="list_img" :src="register.imagen" :alt="register.nombre">
     </div>
     <div class="song_info">
-        <p class="small" :style="{ color: register.nombre !== register.nombre ? 'white' : 'grey' }">{{ register.autor }}</p>
-        <p class="" :style="{ color: register.nombre === register.nombre ? 'white' : 'white' }">{{ register.nombre }}</p>
+        <p class="small" :style="{ color: register.nombre !== register.nombre ? 'white' : 'grey', fontFamily: fontTheme }">{{ register.autor }}</p>
+        <p class="" :style="{ color: register.nombre === register.nombre ? 'white' : 'white', fontFamily: fontTheme }">{{ register.nombre }}</p>
     </div>
     </li>
 </ul>
@@ -25,6 +25,9 @@ export default {
         },
         songData: {
             required: true
+        },
+        fontTheme: {
+          required: false
         }
     }
 }
