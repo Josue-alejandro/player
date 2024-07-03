@@ -203,7 +203,9 @@ export default {
       emisorasShow: false,
       emisoras: [],
       programming: [],
+      mainFont: '',
       mainColor: 'green',
+      secondaryColor: 'white',
       currentTrackHistory: [],
       songData: {
         currentSong: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
@@ -441,7 +443,8 @@ export default {
     const datafromRadio = await obtenerDatos(nameid);
     this.isLoading = true
     this.mainColor = datafromRadio.config[0].color
-
+    this.secondaryColor = datafromRadio.config[0].color2
+    this.fontTheme = datafromRadio.config[0].font
     const obtenerDatosLoop = async () => {
 
       const stationLenght = datafromRadio.station.length; // cantidad de radios

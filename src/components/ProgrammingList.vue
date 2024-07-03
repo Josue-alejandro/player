@@ -42,7 +42,7 @@ export default {
             this.currentDay = day
             this.$emit('change-day', day)
         }
-    }
+	},
 }
 </script>
 
