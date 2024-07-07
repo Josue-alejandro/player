@@ -436,162 +436,145 @@ export default {
     }
   },
   async mounted() {
+    setInterval(() => {
+      const audio = this.$refs.audioPlayer;
+      const result = isNaN(audio.duration)
+      if(result){
+        this.isLoading = true
+        const emisoraData = this.emisoras[this.currentEmisoraId]
+        console.log('Enlace Caido')
+        if(emisoraData.audio.length > 1){
+          console.log('Cambiando...')
+          const oldAudio = this.emisoras[this.currentEmisoraId].audio[0]
+          this.emisoras[this.currentEmisoraId].audio.shift()
+          this.emisoras[this.currentEmisoraId].audio.push(oldAudio)
+          if(this.emisoras[this.currentEmisoraId].metadataList.length > 0){
+
+            const oldMetadata = this.emisoras[this.currentEmisoraId].metadataList[0]
+            this.emisoras[this.currentEmisoraId].metadataList.shift()
+            this.emisoras[this.currentEmisoraId].metadataList.push(oldMetadata)
+
+            const linktotry = this.emisoras[this.currentEmisoraId].metadataList[0]
+
+            fetch(linktotry).then(response => {
+              if(response.ok){
+                return response.json()
+              }
+            }).then(response => {
+              console.log(response)
+
+              const songDetails = response.nowplaying.split(' - ')
+              
+              this.songData.currentAuthor = songDetails[0];
+              this.songData.currentSongName = songDetails[1];
+              this.songData.imagen = response.coverart;
+              this.emisoras[this.currentEmisoraId].image = response.coverart
+              this.emisoras[this.currentEmisoraId].song_name = songDetails[1];
+              this.emisoras[this.currentEmisoraId].author = songDetails[0]
+              console.log(this.emisoras[this.currentEmisoraId])
+            })
+
+          }
+          this.changeSong(
+            this.emisoras[this.currentEmisoraId].audio[0], 
+            this.emisoras[this.currentEmisoraId].song_name, 
+            this.emisoras[this.currentEmisoraId].station_name, 
+            this.emisoras[this.currentEmisoraId].image)
+        }
+      }
+    }, 2000)
+
     this.mode = this.playerMode > 0 ? 1 : 0
     this.minimizedState = this.mode === 1 ? false : true
 
     const nameid = this.$route.params.nameid
     const datafromRadio = await obtenerDatos(nameid);
     this.isLoading = true
+    // Asignar configuraciones principales
     this.mainColor = datafromRadio.config[0].color
     this.secondaryColor = datafromRadio.config[0].color2
     this.fontTheme = datafromRadio.config[0].font
+
+    // Organizar datos de las emisoras
     const obtenerDatosLoop = async () => {
 
       const stationLenght = datafromRadio.station.length; // cantidad de radios
       let currentStation = 0;
 
-      datafromRadio.station.forEach( async station => {
+      for (let i = 0; i < datafromRadio.station.length; i++) {
+        const station = datafromRadio.station[i];
 
-        if(station.metadata !== ''){
+        const audioLinks = station.station_links.split(',');
+        const metadataLinks = station.metadata.split(',')
 
-          const metadataLink = station.metadata.split(',')
+        // Objeto de emisora a agregar a la lista
+        let emisora = {
+          station_name: station.station_name,
+          image: DefaultImage,
+          selectId: station.id,
+          audioList: audioLinks,
+          metadataList: metadataLinks,
+          audio: audioLinks,
+          artist_name: station.station_name,
+          song_name: station.slogan,
+          history: [],
+          programming: []
+        }
 
-          await fetch(metadataLink[0]).then(response => {
+          fetch(metadataLinks[0]).then(response => {
             if(response.ok){
               return response.json()
             }
-          }).then(response => {
-          
-
-            // Verifica que hay metadata
-            if(response.status){
-              console.log('hay metadata')
-              let history = [];
-            let proData = [];
-
-            response.trackhistory.forEach((track, index) => {
-              const result = track.split(' - ')
-              const register = {
-                nombre: result[0],
-                autor: result[1],
-                imagen: response.covers[index]
-              }
-              history.push(register)
-            })
-
-            if(station.programming){
-              proData = station.programming
-            }
-
-            const songDetails = response.nowplaying.split(' - ')
-            const audioLinks = station.station_links.split(',')
-            const reverseAudioLinks = audioLinks.reverse()
-
-            // Objeto de emisora a agregar a la lista
-            let emisora = {
-              station_name: station.station_name,
-              image: response.coverart,
-              selectId: station.id,
-              audio: [],
-              artist_name: songDetails[0],
-              song_name: songDetails[1],
-              history: history,
-              programming: proData
-            }
-
-            if(reverseAudioLinks.length > 1){
-              reverseAudioLinks.forEach( async (val) => {
-              await fetch(val, {mode: 'no-cors'}).then(r=>{
-                console.log(val);
-                console.log(r)
-                emisora.audio.unshift(val)
-              })
-              .catch(e=>{
-                console.log(e)
-                console.log(val)
-                emisora.audio.push(val)
-              });
-            })
-
-            }else{
-              emisora.audio = reverseAudioLinks
-            }
-            
-            this.emisoras.push(emisora)
-            
-            currentStation++
-            if(currentStation === stationLenght){
-              this.selectEmisoraNoPlay(station.id)
-              this.currentStationName = station.station_name
-              this.changeSongNoPlay(audioLinks[0], songDetails[1], songDetails[0], response.coverart)
-              this.isPlaying = false
-              this.isLoading = false
-            }
-            }else{
-              console.log('no hay metadata')
-              let proData = []
-              if(station.programming){
-                proData = station.programming
-              }
-
-              // Objeto de emisora a agregar a la lista
-              let emisora = {
-                station_name: station.station_name,
-                image: DefaultImage,
-                selectId: station.id,
-                audio: [],
-                artist_name: station.station_name,
-                song_name: station.slogan,
-                history: history,
-                programming: proData
-              }
-
-              const audioLinks = station.station_links.split(',')
-              const reverseAudioLinks = audioLinks.reverse()
-
-              if(reverseAudioLinks.length > 1){
-                reverseAudioLinks.forEach( async (val) => {
-                  await fetch(val, {mode: 'no-cors'}).then(r=>{
-                    console.log(val);
-                    console.log(r)
-                    emisora.audio.unshift(val)
-                  })
-                  .catch(e=>{
-                    console.log(val)
-                    console.log(e)
-                    emisora.audio.push(val)
-                  });
-                })
-
-              }else{
-                emisora.audio = reverseAudioLinks
-              }
-
-              this.emisoras.push(emisora)
+          }).then(data => {
+            if(data.status){
               
+              const songDetails = data.nowplaying.split(' - ')
+              emisora.artist_name = songDetails[0]
+              emisora.song_name = songDetails[1]
+              let history = []
+              data.trackhistory.forEach((track, index) => {
+                const result = track.split(' - ')
+                const register = {
+                  nombre: result[0],
+                  autor: result[1],
+                  imagen: data.covers[index]
+                }
+                history.push(register)
+              })
+              
+              emisora.history = history
+              emisora.image = data.coverart
+              
+              console.log(data)
+              this.emisoras.push(emisora)
+
               currentStation++
               
               if(currentStation === stationLenght){
                 this.selectEmisoraNoPlay(station.id)
                 this.currentStationName = station.station_name
-                this.changeSongNoPlay(audioLinks[0], '', '', DefaultImage)
+                this.changeSongNoPlay(emisora.audio[0], songDetails[0], songDetails[1], emisora.image)
                 this.isPlaying = false
                 this.isLoading = false
               }
 
+            }else{
+              this.emisoras.push(emisora)
+
+              currentStation++
+              
+              if(currentStation === stationLenght){
+                this.selectEmisoraNoPlay(station.id)
+                this.currentStationName = station.station_name
+                this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
+                this.isPlaying = false
+                this.isLoading = false
+
+              }
             }
 
           })
-
-        
-        }
-
-      })
-
-      if (datafromRadio.station.length === 1){
-        this.emisorasAvaliable = false
       }
-      
      }
 
     await obtenerDatosLoop();
@@ -615,7 +598,7 @@ export default {
   },
   beforeUnmount() {
     clearInterval(this.progressInterval);
-  }
+  },
 }
 </script>
 
