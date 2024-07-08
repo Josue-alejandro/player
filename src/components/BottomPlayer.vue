@@ -188,6 +188,7 @@ export default {
       minimizedState: true,
       isPlaying: false,
       isLoading: false,
+      interacted: false,
       currentEmisoraId: 0,
       fontTheme: 'Arial, sans-serif',
       volume: 50,
@@ -244,6 +245,7 @@ export default {
       }
     },
     playHandle () {
+      this.interacted = true
       const audio = this.$refs.audioPlayer;
 
       if (this.isPlaying) {
@@ -437,10 +439,14 @@ export default {
   },
   async mounted() {
     setInterval(() => {
+      console.log('hola')
       const audio = this.$refs.audioPlayer;
       const result = isNaN(audio.duration)
+      console.log(result)
       if(result){
-        this.isLoading = true
+        if(this.interacted === true){
+          this.isLoading = true
+        }
         const emisoraData = this.emisoras[this.currentEmisoraId]
         console.log('Enlace Caido')
         if(emisoraData.audio.length > 1){
@@ -461,8 +467,6 @@ export default {
                 return response.json()
               }
             }).then(response => {
-              console.log(response)
-
               const songDetails = response.nowplaying.split(' - ')
               
               this.songData.currentAuthor = songDetails[0];
@@ -471,15 +475,24 @@ export default {
               this.emisoras[this.currentEmisoraId].image = response.coverart
               this.emisoras[this.currentEmisoraId].song_name = songDetails[1];
               this.emisoras[this.currentEmisoraId].author = songDetails[0]
-              console.log(this.emisoras[this.currentEmisoraId])
             })
 
           }
-          this.changeSong(
+          if(this.interacted === true){
+            this.changeSong(
             this.emisoras[this.currentEmisoraId].audio[0], 
             this.emisoras[this.currentEmisoraId].song_name, 
             this.emisoras[this.currentEmisoraId].station_name, 
             this.emisoras[this.currentEmisoraId].image)
+          }else{
+            this.changeSongNoPlay(
+            this.emisoras[this.currentEmisoraId].audio[0], 
+            this.emisoras[this.currentEmisoraId].song_name, 
+            this.emisoras[this.currentEmisoraId].station_name, 
+            this.emisoras[this.currentEmisoraId].image)
+            this.isLoading = false
+          }
+
         }
       }
     }, 2000)
@@ -548,7 +561,6 @@ export default {
               emisora.history = history
               emisora.image = data.coverart
               
-              console.log(data)
               this.emisoras.push(emisora)
 
               currentStation++
