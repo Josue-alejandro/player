@@ -245,10 +245,11 @@ export default {
       }
     },
     playHandle () {
-      this.interacted = true
-      const audio = this.$refs.audioPlayer;
+      if(this.isLoading === false){
+        this.interacted = true
+        const audio = this.$refs.audioPlayer;
 
-      if (this.isPlaying) {
+        if (this.isPlaying) {
         audio.pause();
         this.isPlaying = false;
       } else {
@@ -259,6 +260,8 @@ export default {
           this.isLoading = false; // Desactivar la carga después de medio segundo
         }, 500);
       }
+      }
+      
     },
     changeSongMobile(data) {
       this.changeSong(data.cancion, data.nombre, data.autor);
@@ -298,9 +301,9 @@ export default {
       audio.currentTime = 0;
       this.songData.currentSong = song;
 
-      const playNewSong = () => {
+      const playNewSong = async () => {
         try{
-          audio.play(); // Reproducir la nueva canción automáticamente una vez cargada
+          await audio.play(); // Reproducir la nueva canción automáticamente una vez cargada
         }catch(error){
           console.log(error)
         }
@@ -319,7 +322,6 @@ export default {
       }
     },
     changeSongNoPlay(song, name, author, imagen) {
-      this.isLoading = true;
       this.songData.currentAuthor = author;
       this.songData.currentSongName = name;
       this.songData.imagen = imagen;
@@ -327,6 +329,16 @@ export default {
       audio.pause();
       audio.currentTime = 0;
       this.songData.currentSong = song;
+    },
+    changeSongButPlay(song, name, author, imagen) {
+      this.songData.currentAuthor = author;
+      this.songData.currentSongName = name;
+      this.songData.imagen = imagen;
+      const audio = this.$refs.audioPlayer;
+      audio.pause();
+      audio.currentTime = 0;
+      this.songData.currentSong = song;
+      audio.play()
     },
     openNewWindow(){
       const nameid = this.$route.params.nameid
@@ -417,35 +429,15 @@ export default {
       this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
 
     },
-    selectEmisoraNoPlay(id) {
-      this.emisoraSelected = id
-      //buscar emisora seleccionada
-      const emisoraEncontrada = this.emisoras.find(val => val.selectId == id)
-      const indiceEmisora = this.emisoras.findIndex(val => val.selectId == id)
-      this.canciones = []
-      this.programming = emisoraEncontrada.programming
-      this.currentEmisoraId = indiceEmisora
-      this.currentTrackHistory = emisoraEncontrada.history
-      emisoraEncontrada.audio.forEach((val, index) => {
-        this.canciones.push({
-          id: index,
-          nombre: emisoraEncontrada.song_name,
-          autor: emisoraEncontrada.artist_name,
-          cancion: val,
-          imagen: emisoraEncontrada.image
-        })
-      });
-    }
-  },
-  async mounted() {
-    setInterval(() => {
+    checkState() {
+      
       const audio = this.$refs.audioPlayer;
       const result = isNaN(audio.duration)
       let errorState = false
       fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
         console.log(response)
       }).catch(error => {
-        console.log(error)
+        console.log('dio error!', error)
         errorState = true
 
         if(result || errorState === true){
@@ -499,22 +491,43 @@ export default {
         }
       }
       })
-
-
-      console.log(errorState)
-
-      
-
-      console.log(this.songData.currentSong)
-    }, 6000)
+      //this.isLoading = false    
+    },
+    selectEmisoraNoPlay(id) {
+      this.emisoraSelected = id
+      //buscar emisora seleccionada
+      const emisoraEncontrada = this.emisoras.find(val => val.selectId == id)
+      const indiceEmisora = this.emisoras.findIndex(val => val.selectId == id)
+      this.canciones = []
+      this.programming = emisoraEncontrada.programming
+      this.currentEmisoraId = indiceEmisora
+      this.currentTrackHistory = emisoraEncontrada.history
+      emisoraEncontrada.audio.forEach((val, index) => {
+        this.canciones.push({
+          id: index,
+          nombre: emisoraEncontrada.song_name,
+          autor: emisoraEncontrada.artist_name,
+          cancion: val,
+          imagen: emisoraEncontrada.image
+        })
+      });
+    }
+  },
+  async mounted() {
+    setInterval(() => {
+      if(this.interacted){
+        this.checkState()
+      }
+    }, 3000)
 
     this.mode = this.playerMode > 0 ? 1 : 0
     this.minimizedState = this.mode === 1 ? false : true
+    this.isLoading = true
 
     const nameid = this.$route.params.nameid
     const datafromRadio = await obtenerDatos(nameid);
-    this.isLoading = true
     // Asignar configuraciones principales
+    console.log(datafromRadio)
     this.mainColor = datafromRadio.config[0].color
     this.secondaryColor = datafromRadio.config[0].color2
     this.fontTheme = datafromRadio.config[0].font
@@ -580,10 +593,9 @@ export default {
                 this.selectEmisoraNoPlay(station.id)
                 this.currentStationName = station.station_name
                 this.changeSongNoPlay(emisora.audio[0], songDetails[0], songDetails[1], emisora.image)
-                this.isPlaying = false
-                this.isLoading = false
               }
-
+              this.checkState() 
+              this.isLoading = false
             }else{
               this.emisoras.push(emisora)
 
@@ -593,10 +605,8 @@ export default {
                 this.selectEmisoraNoPlay(station.id)
                 this.currentStationName = station.station_name
                 this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
-                this.isPlaying = false
-                this.isLoading = false
-
               }
+              this.checkState() 
             }
 
           })
@@ -608,9 +618,8 @@ export default {
             this.selectEmisoraNoPlay(station.id)
             this.currentStationName = station.station_name
             this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
-            this.isPlaying = false
-            this.isLoading = false
           }
+          this.checkState() 
         }
           
       }

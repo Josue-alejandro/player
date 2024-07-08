@@ -73,7 +73,7 @@ i {
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: red;
+  background-color: rgb(0, 255, 170);
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0);
 }
