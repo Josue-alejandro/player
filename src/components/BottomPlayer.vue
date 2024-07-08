@@ -494,7 +494,9 @@ export default {
     this.mainColor = datafromRadio.config[0].color
     this.secondaryColor = datafromRadio.config[0].color2
     this.fontTheme = datafromRadio.config[0].font
-
+    if(datafromRadio.station.length === 1){
+      this.emisorasAvaliable = false
+    }
     // Organizar datos de las emisoras
     const obtenerDatosLoop = async () => {
 
