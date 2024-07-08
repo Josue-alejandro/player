@@ -521,6 +521,7 @@ export default {
           programming: []
         }
 
+        if(metadataLinks[0] !== ""){
           fetch(metadataLinks[0]).then(response => {
             if(response.ok){
               return response.json()
@@ -574,6 +575,19 @@ export default {
             }
 
           })
+        }else{
+          this.emisoras.push(emisora)
+          currentStation++
+          
+          if(currentStation === stationLenght){
+            this.selectEmisoraNoPlay(station.id)
+            this.currentStationName = station.station_name
+            this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
+            this.isPlaying = false
+            this.isLoading = false
+          }
+        }
+          
       }
      }
 
