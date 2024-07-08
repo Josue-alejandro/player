@@ -439,18 +439,21 @@ export default {
   },
   async mounted() {
     setInterval(() => {
-      console.log('hola')
       const audio = this.$refs.audioPlayer;
       const result = isNaN(audio.duration)
-      console.log(result)
-      if(result){
+      let errorState = false
+      fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+        errorState = true
+
+        if(result || errorState === true){
         if(this.interacted === true){
           this.isLoading = true
         }
         const emisoraData = this.emisoras[this.currentEmisoraId]
-        console.log('Enlace Caido')
         if(emisoraData.audio.length > 1){
-          console.log('Cambiando...')
           const oldAudio = this.emisoras[this.currentEmisoraId].audio[0]
           this.emisoras[this.currentEmisoraId].audio.shift()
           this.emisoras[this.currentEmisoraId].audio.push(oldAudio)
@@ -495,7 +498,15 @@ export default {
 
         }
       }
-    }, 2000)
+      })
+
+
+      console.log(errorState)
+
+      
+
+      console.log(this.songData.currentSong)
+    }, 6000)
 
     this.mode = this.playerMode > 0 ? 1 : 0
     this.minimizedState = this.mode === 1 ? false : true
