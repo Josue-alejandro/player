@@ -562,7 +562,7 @@ export default {
           programming: []
         }
 
-        if(station.programming.length > 0){
+        if(station.programming.length > 5){
           this.proAvaliable = true;
           emisora.programming = station.programming
         }
