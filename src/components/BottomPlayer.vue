@@ -96,6 +96,7 @@
       <MobilePlayer 
       v-if=" minimizedState === false " 
       class="mobile_bar"
+      :proAvaliable="proAvaliable"
       :fontTheme="fontTheme"
       :emisorasAvaliable="emisorasAvaliable"
       :currentStationName="currentStationName"
@@ -184,6 +185,7 @@ export default {
   data() {
     return {
       mode: 1,
+      proAvaliable: false,
       mobileMode: false,
       minimizedState: true,
       isPlaying: false,
@@ -558,6 +560,11 @@ export default {
           song_name: station.slogan,
           history: [],
           programming: []
+        }
+
+        if(station.programming.length > 0){
+          this.proAvaliable = true;
+          emisora.programming = station.programming
         }
 
         if(metadataLinks[0] !== ""){

@@ -93,6 +93,7 @@
           </div>
           <div class="icons_div side_border">
             <i class="material-icons icons_m" v-if="emisorasAvaliable" @click="emisorasShow = !emisorasShow">radio</i>
+            <i class="material-icons icons_m-inv" v-else >radio</i>
           </div>
         </div>
         <div>
@@ -111,7 +112,7 @@
                   </div>
                   <p :style="{fontFamily: fontTheme}">Anteriores</p>
                 </div>
-                <div class="options" @click="optionActive = 1"
+                <div class="options" v-if="proAvaliable" @click="optionActive = 1"
                   :style="{ borderBottom: optionActive === 1 ? `3px solid ${mainColor}` : '3px solid rgba(0,0,0,0)' }">
                   <div class="icons_nav">
                     <i class="material-icons icons_m">mic_none</i>
@@ -169,6 +170,9 @@ export default {
     }
   },
   props: {
+    proAvaliable:{
+      required: true
+    },
     isLoading:{
       required: true
     },
@@ -365,6 +369,10 @@ body {
 
 .icons_m{
   font-size: 24px;
+}
+
+.icons_m-inv{
+  opacity: 0;
 }
 
 @media (max-width: 400px) {
