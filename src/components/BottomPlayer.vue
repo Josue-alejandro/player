@@ -414,6 +414,9 @@ export default {
       const indiceEmisora = this.emisoras.findIndex(val => val.selectId == id)
       this.canciones = []
       this.programming = emisoraEncontrada.programming
+      if(this.programming.length > 5){
+          this.proAvaliable = true;
+        }
       this.currentEmisoraId = indiceEmisora
       this.currentTrackHistory = emisoraEncontrada.history
       this.currentStationName = emisoraEncontrada.station_name
@@ -502,6 +505,9 @@ export default {
       const indiceEmisora = this.emisoras.findIndex(val => val.selectId == id)
       this.canciones = []
       this.programming = emisoraEncontrada.programming
+      if(this.programming.length > 5){
+          this.proAvaliable = true;
+        }
       this.currentEmisoraId = indiceEmisora
       this.currentTrackHistory = emisoraEncontrada.history
       emisoraEncontrada.audio.forEach((val, index) => {
