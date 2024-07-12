@@ -462,12 +462,14 @@ export default {
 
             const linktotry = this.emisoras[this.currentEmisoraId].metadataList[0]
 
-            fetch(linktotry).then(response => {
+            if(linktotry !== ""){
+              fetch(linktotry).then(response => {
               if(response.ok){
                 return response.json()
               }
             }).then(response => {
-              const songDetails = response.nowplaying.split(' - ')
+              if(response){
+                const songDetails = response.nowplaying.split(' - ')
               
               this.songData.currentAuthor = songDetails[0];
               this.songData.currentSongName = songDetails[1];
@@ -475,7 +477,9 @@ export default {
               this.emisoras[this.currentEmisoraId].image = response.coverart
               this.emisoras[this.currentEmisoraId].song_name = songDetails[1];
               this.emisoras[this.currentEmisoraId].author = songDetails[0]
+              }
             })
+            } 
 
           }
           if(this.interacted === true){
@@ -526,7 +530,7 @@ export default {
       if(this.interacted){
         this.checkState()
       }
-    }, 3000)
+    }, 8000)
 
     this.mode = this.playerMode > 0 ? 1 : 0
     this.minimizedState = this.mode === 1 ? false : true
@@ -568,6 +572,8 @@ export default {
           programming: []
         }
 
+        console.log(audioLinks)
+
         if(station.programming.length > 5){
           this.proAvaliable = true;
           emisora.programming = station.programming
@@ -599,6 +605,7 @@ export default {
               emisora.image = data.coverart
               
               this.emisoras.push(emisora)
+              console.log(emisora)
 
               currentStation++
               
@@ -608,7 +615,6 @@ export default {
                 this.changeSongNoPlay(emisora.audio[0], songDetails[0], songDetails[1], emisora.image)
               }
               this.checkState() 
-              this.isLoading = false
             }else{
               this.emisoras.push(emisora)
 
@@ -619,7 +625,7 @@ export default {
                 this.currentStationName = station.station_name
                 this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
               }
-              this.checkState() 
+              this.checkState()
             }
 
           })
@@ -632,7 +638,8 @@ export default {
             this.currentStationName = station.station_name
             this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
           }
-          this.checkState() 
+          this.checkState()
+          this.isLoading = false
         }
           
       }
