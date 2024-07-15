@@ -615,6 +615,7 @@ export default {
                 this.changeSongNoPlay(emisora.audio[0], songDetails[0], songDetails[1], emisora.image)
               }
               this.checkState() 
+              this.isLoading = false
             }else{
               this.emisoras.push(emisora)
 
