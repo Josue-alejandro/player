@@ -57,7 +57,7 @@
           </span>
         </div>
         <span :style="{width: '500px', textAlign: 'left', fontFamily: fontTheme}" class="nameMotion">
-          {{ songData.currentAuthor }} - {{ songData.currentSongName }}
+          {{ songData.currentAuthor }}{{ songData.currentSongName }}
         </span>
       </div>
       <div class="widgets_section">
@@ -135,8 +135,6 @@
 import InMyBlood from '../songs/son1.wav';
 import EmisoraDesktop from './EmisoraDesktop.vue';
 import SpinIcon from './SpinIcon.vue'
-import DefaultImage from '../../public/default.jpeg'
-
 
 
 
@@ -331,6 +329,7 @@ export default {
       audio.pause();
       audio.currentTime = 0;
       this.songData.currentSong = song;
+      this.songData.imagen = imagen
     },
     changeSongButPlay(song, name, author, imagen) {
       this.songData.currentAuthor = author;
@@ -473,9 +472,7 @@ export default {
               
               this.songData.currentAuthor = songDetails[0];
               this.songData.currentSongName = songDetails[1];
-              this.songData.imagen = response.coverart;
-              this.emisoras[this.currentEmisoraId].image = response.coverart
-              this.emisoras[this.currentEmisoraId].song_name = songDetails[1];
+              this.emisoras[this.currentEmisoraId].song_name = " - " + songDetails[1];
               this.emisoras[this.currentEmisoraId].author = songDetails[0]
               }
             })
@@ -557,16 +554,19 @@ export default {
 
         const audioLinks = station.station_links.split(',');
         const metadataLinks = station.metadata.split(',')
+        const imagenName = station.img.replace(/\s+/g,'%20');
+        const imgCover = 'https://player-radio-backend.inovanex.com/api/images' + imagenName
+        console.log('imagen', imgCover)
 
         // Objeto de emisora a agregar a la lista
         let emisora = {
           station_name: station.station_name,
-          image: DefaultImage,
+          image: imgCover,
           selectId: station.id,
           audioList: audioLinks,
           metadataList: metadataLinks,
           audio: audioLinks,
-          artist_name: station.station_name,
+          artist_name: '',
           song_name: station.slogan,
           history: [],
           programming: []
@@ -589,7 +589,7 @@ export default {
               
               const songDetails = data.nowplaying.split(' - ')
               emisora.artist_name = songDetails[0]
-              emisora.song_name = songDetails[1]
+              emisora.song_name = " - " + songDetails[1]
               let history = []
               data.trackhistory.forEach((track, index) => {
                 const result = track.split(' - ')
@@ -602,7 +602,6 @@ export default {
               })
               
               emisora.history = history
-              emisora.image = data.coverart
               
               this.emisoras.push(emisora)
               console.log(emisora)
@@ -612,7 +611,7 @@ export default {
               if(currentStation === stationLenght){
                 this.selectEmisoraNoPlay(station.id)
                 this.currentStationName = station.station_name
-                this.changeSongNoPlay(emisora.audio[0], songDetails[0], songDetails[1], emisora.image)
+                this.changeSongNoPlay(emisora.audio[0], " - " + songDetails[0], songDetails[1], emisora.image)
               }
               this.checkState() 
               this.isLoading = false
@@ -624,7 +623,7 @@ export default {
               if(currentStation === stationLenght){
                 this.selectEmisoraNoPlay(station.id)
                 this.currentStationName = station.station_name
-                this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
+                this.changeSongNoPlay(audioLinks[0], '', station.slogan, emisora.image)
               }
               this.checkState()
             }
@@ -637,7 +636,7 @@ export default {
           if(currentStation === stationLenght){
             this.selectEmisoraNoPlay(station.id)
             this.currentStationName = station.station_name
-            this.changeSongNoPlay(audioLinks[0], station.station_name, station.slogan, DefaultImage)
+            this.changeSongNoPlay(audioLinks[0], '', station.slogan, emisora.image)
           }
           this.checkState()
           this.isLoading = false
@@ -651,7 +650,7 @@ export default {
     this.canciones
 
     this.songData.currentSong = this.canciones[0].cancion
-    this.songData.imagen = DefaultImage
+    //this.songData.imagen = DefaultImage
     this.songData.id = this.canciones[0].id
     this.songData.currentAuthor = this.canciones[0].autor
     this.songData.currentSongName = this.canciones[0].nombre

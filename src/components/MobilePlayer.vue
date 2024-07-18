@@ -53,7 +53,7 @@
           <div class="cover cover_back">
             <img :src="songData.imagen" class="cover cover_image" ref="image" @load="playAnimation">
             <span class="brand" :style="{color: mainColor, fontFamily: fontTheme}">{{ currentStationName }}</span>
-            <span class="down_brand" :style="{fontFamily: fontTheme}">{{ songData.currentAuthor }} - {{ songData.currentSongName }}</span>
+            <span class="down_brand" :style="{fontFamily: fontTheme}">{{ songData.currentAuthor }}{{ songData.currentSongName }}</span>
           </div>
           <div>
             <div class="song_duration">
