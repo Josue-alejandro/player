@@ -555,7 +555,7 @@ export default {
         const audioLinks = station.station_links.split(',');
         const metadataLinks = station.metadata.split(',')
         const imagenName = station.img.replace(/\s+/g,'%20');
-        const imgCover = 'https://player-radio-backend.inovanex.com/api/images' + imagenName
+        const imgCover = 'https://player-radio-backend.inovanex.com/api/images/' + imagenName
         console.log('imagen', imgCover)
 
         // Objeto de emisora a agregar a la lista
