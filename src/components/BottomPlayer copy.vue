@@ -580,54 +580,70 @@ export default {
           emisora.programming = station.programming
         }
 
-        this.emisoras.push(emisora)
-        
-        currentStation++
-        
-        if(currentStation === stationLenght){
-          this.selectEmisoraNoPlay(station.id)
-          this.currentStationName = station.station_name
-          this.changeSongNoPlay(audioLinks[0], '', station.slogan, emisora.image)
+        if(metadataLinks[0] !== ""){
+          fetch(metadataLinks[0]).then(response => {
+            if(response.ok){
+              return response.json()
+            }
+          }).then(data => {
+            if(data.status){
+              
+              const songDetails = data.nowplaying.split(' - ')
+              emisora.artist_name = songDetails[0]
+              emisora.song_name = " - " + songDetails[1]
+              let history = []
+              data.trackhistory.forEach((track, index) => {
+                const result = track.split(' - ')
+                const register = {
+                  nombre: result[0],
+                  autor: result[1],
+                  imagen: data.covers[index]
+                }
+                history.push(register)
+              })
+              
+              emisora.history = history
+              
+              this.emisoras.push(emisora)
+              console.log(emisora)
+
+              currentStation++
+              
+              if(currentStation === stationLenght){
+                this.selectEmisoraNoPlay(station.id)
+                this.currentStationName = station.station_name
+                this.changeSongNoPlay(emisora.audio[0], " - " + songDetails[0], songDetails[1], emisora.image)
+              }
+              this.checkState() 
+              this.isLoading = false
+            }else{
+              this.emisoras.push(emisora)
+
+              currentStation++
+              
+              if(currentStation === stationLenght){
+                this.selectEmisoraNoPlay(station.id)
+                this.currentStationName = station.station_name
+                this.changeSongNoPlay(audioLinks[0], '', station.slogan, emisora.image)
+              }
+              this.checkState()
+            }
+
+          })
+        }else{
+          this.emisoras.push(emisora)
+          currentStation++
+          
+          if(currentStation === stationLenght){
+            this.selectEmisoraNoPlay(station.id)
+            this.currentStationName = station.station_name
+            this.changeSongNoPlay(audioLinks[0], '', station.slogan, emisora.image)
+          }
           this.checkState()
           this.isLoading = false
-
-          if(metadataLinks[0] !== ""){
-            fetch(metadataLinks[0]).then(response => {
-              if(response.ok){
-                return response.json()
-              }
-            }).then(data => {
-              if(data.status){
-                const songDetails = data.nowplaying.split(' - ')
-                const nombreAutor = songDetails[0]
-                const nombreCancion = " - " + songDetails[1]
-                let history = []
-                data.trackhistory.forEach((track, index) => {
-                  const result = track.split(' - ')
-                  const register = {
-                    nombre: result[0],
-                    autor: result[1],
-                    imagen: data.covers[index]
-                  }
-                  history.push(register)
-                })
-                
-                this.emisoras[i].history = history
-                this.emisoras[i].song_name = nombreCancion
-                this.emisoras[i].artist_name = nombreAutor
-                this.currentTrackHistory = history
-                
-                this.songData.currentAuthor = nombreAutor
-                this.songData.currentSongName = nombreCancion
-                console.log(this.emisoras[i])
-              }
-            })
-          }
         }
-        
+          
       }
-
-
      }
 
     await obtenerDatosLoop();
