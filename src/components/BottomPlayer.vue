@@ -304,12 +304,14 @@ export default {
       const playNewSong = async () => {
         try{
           await audio.play(); // Reproducir la nueva canción automáticamente una vez cargada
+          this.isPlaying = true;
+          this.isLoading = false;
+          audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
         }catch(error){
-          console.log(error)
+          console.log('paso por aca!', error)
+          //audio.pause()
+          this.checkState()
         }
-        this.isPlaying = true;
-        this.isLoading = false;
-        audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
       };
 
       if (audio.readyState >= 2) {
@@ -437,6 +439,7 @@ export default {
       const oldAudio = this.emisoras[this.currentEmisoraId].audio[0]
       this.emisoras[this.currentEmisoraId].audio.shift()
       this.emisoras[this.currentEmisoraId].audio.push(oldAudio)
+      this.isPlaying = false
     },
     checkState() {
       const audio = this.$refs.audioPlayer;
@@ -444,6 +447,7 @@ export default {
       let errorState = false
       fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
         console.log(response)
+        this.isLoading = false
       }).catch(error => {
         console.log(error)
         this.songData.currentAuthor = ""
@@ -464,7 +468,7 @@ export default {
             this.emisoras[this.currentEmisoraId].audio[0], 
             '', 
             this.emisoras[this.currentEmisoraId].slogan, 
-            this.emisoras[this.currentEmisoraId].image)
+            this.emisoras[this.currentEmisoraId].image)          
           }else{
             this.changeSongNoPlay(
             this.emisoras[this.currentEmisoraId].audio[0], 
