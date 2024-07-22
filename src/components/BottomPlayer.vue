@@ -433,15 +433,21 @@ export default {
       this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
 
     },
+    changeLink(){
+      const oldAudio = this.emisoras[this.currentEmisoraId].audio[0]
+      this.emisoras[this.currentEmisoraId].audio.shift()
+      this.emisoras[this.currentEmisoraId].audio.push(oldAudio)
+    },
     checkState() {
-      
       const audio = this.$refs.audioPlayer;
       const result = isNaN(audio.duration)
       let errorState = false
       fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
         console.log(response)
       }).catch(error => {
-        console.log('dio error!', error)
+        console.log(error)
+        this.songData.currentAuthor = ""
+        this.songData.currentSongName = "Reconectando..."
         errorState = true
 
         if(result || errorState === true){
@@ -450,46 +456,20 @@ export default {
         }
         const emisoraData = this.emisoras[this.currentEmisoraId]
         if(emisoraData.audio.length > 1){
-          const oldAudio = this.emisoras[this.currentEmisoraId].audio[0]
-          this.emisoras[this.currentEmisoraId].audio.shift()
-          this.emisoras[this.currentEmisoraId].audio.push(oldAudio)
-          if(this.emisoras[this.currentEmisoraId].metadataList.length > 0){
 
-            const oldMetadata = this.emisoras[this.currentEmisoraId].metadataList[0]
-            this.emisoras[this.currentEmisoraId].metadataList.shift()
-            this.emisoras[this.currentEmisoraId].metadataList.push(oldMetadata)
+          this.changeLink()
 
-            const linktotry = this.emisoras[this.currentEmisoraId].metadataList[0]
-
-            if(linktotry !== ""){
-              fetch(linktotry).then(response => {
-              if(response.ok){
-                return response.json()
-              }
-            }).then(response => {
-              if(response){
-                const songDetails = response.nowplaying.split(' - ')
-              
-              this.songData.currentAuthor = songDetails[0];
-              this.songData.currentSongName = songDetails[1];
-              this.emisoras[this.currentEmisoraId].song_name = " - " + songDetails[1];
-              this.emisoras[this.currentEmisoraId].author = songDetails[0]
-              }
-            })
-            } 
-
-          }
           if(this.interacted === true){
             this.changeSong(
             this.emisoras[this.currentEmisoraId].audio[0], 
-            this.emisoras[this.currentEmisoraId].song_name, 
-            this.emisoras[this.currentEmisoraId].station_name, 
+            '', 
+            this.emisoras[this.currentEmisoraId].slogan, 
             this.emisoras[this.currentEmisoraId].image)
           }else{
             this.changeSongNoPlay(
             this.emisoras[this.currentEmisoraId].audio[0], 
-            this.emisoras[this.currentEmisoraId].song_name, 
-            this.emisoras[this.currentEmisoraId].station_name, 
+            '', 
+            this.emisoras[this.currentEmisoraId].slogan, 
             this.emisoras[this.currentEmisoraId].image)
             this.isLoading = false
           }
@@ -525,7 +505,6 @@ export default {
   async mounted() {
     setInterval(() => {
       if(this.interacted && this.isPlaying){
-        console.log('checking')
         this.checkState()
       }
     }, 5000)
@@ -570,7 +549,8 @@ export default {
           artist_name: '',
           song_name: station.slogan,
           history: [],
-          programming: []
+          programming: [],
+          slogan: station.slogan
         }
 
         console.log(audioLinks)
