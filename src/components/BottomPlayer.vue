@@ -569,9 +569,10 @@ export default {
         currentStation++
         
         if(currentStation === stationLenght){
-          this.selectEmisoraNoPlay(station.id)
-          this.currentStationName = station.station_name
-          this.changeSongNoPlay(audioLinks[0], '', station.slogan, emisora.image)
+          console.log(this.emisoras[0])
+          this.selectEmisoraNoPlay(this.emisoras[0].selectId)
+          this.currentStationName = this.emisoras[0].station_name
+          this.changeSongNoPlay(this.emisoras[0].audio[0], '', this.emisoras[0].slogan, this.emisoras[0].image)
           this.checkState()
           this.isLoading = false
 

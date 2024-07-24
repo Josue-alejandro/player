@@ -46,7 +46,7 @@
             <div class="icons_top popUpButton" @click="openNewWindow">
               <i class="material-icons icons_m" style="font-size: 18px;">open_in_new</i>
             </div>
-            <div class="icons_top" @click="playlistActive = !playlistActive">
+            <div v-if="history.length > 0 || programmingShow > 0" class="icons_top" @click="playlistActive = !playlistActive">
               <i class="material-icons icons_m" style="font-size: 27px; transform: scaleX(1.3) scaleY(0.9);">playlist_play</i>
             </div>
           </div>
