@@ -309,8 +309,7 @@ export default {
           audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
         }catch(error){
           console.log('paso por aca!', error)
-          //audio.pause()
-          this.checkState()
+          audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
         }
       };
 
@@ -318,7 +317,7 @@ export default {
         // Si el archivo de audio ya está cargado
         setTimeout(() => {
           playNewSong();
-        }, 1000); // Mostrar un segundo de carga antes de reproducir
+        }, 2000); // Mostrar un segundo de carga antes de reproducir
       } else {
         audio.addEventListener('canplaythrough', playNewSong);
       }
@@ -436,39 +435,26 @@ export default {
 
     },
     changeLink(){
-      const oldAudio = this.emisoras[this.currentEmisoraId].audio[0]
-      this.emisoras[this.currentEmisoraId].audio.shift()
-      this.emisoras[this.currentEmisoraId].audio.push(oldAudio)
-      this.isPlaying = false
+      let links = this.emisoras[this.currentEmisoraId].audio
+      const oldLink = links.shift()
+      links.push(oldLink)
+      console.log(links)
     },
     checkState() {
-      const audio = this.$refs.audioPlayer;
-      const result = isNaN(audio.duration)
-      let errorState = false
       fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
         console.log(response)
+        console.log('ta ok')
         this.isLoading = false
       }).catch(error => {
         console.log(error)
-        this.songData.currentAuthor = ""
-        this.songData.currentSongName = "Reconectando..."
-        errorState = true
-
-        if(result || errorState === true){
-        if(this.interacted === true){
-          this.isLoading = true
-        }
-        const emisoraData = this.emisoras[this.currentEmisoraId]
-        if(emisoraData.audio.length > 1){
+        this.isLoading = true // Inicia carga
+        const currentEmisora = this.emisoras[this.currentEmisoraId]
+        if(currentEmisora.audio.length > 1){
 
           this.changeLink()
-
+          
           if(this.interacted === true){
-            this.changeSong(
-            this.emisoras[this.currentEmisoraId].audio[0], 
-            '', 
-            this.emisoras[this.currentEmisoraId].slogan, 
-            this.emisoras[this.currentEmisoraId].image)          
+            this.changeSong(this.emisoras[this.currentEmisoraId].audio[0], '', this.emisoras[this.currentEmisoraId].slogan, this.emisoras[this.currentEmisoraId].image)
           }else{
             this.changeSongNoPlay(
             this.emisoras[this.currentEmisoraId].audio[0], 
@@ -479,7 +465,6 @@ export default {
           }
 
         }
-      }
       })
       //this.isLoading = false    
     },
