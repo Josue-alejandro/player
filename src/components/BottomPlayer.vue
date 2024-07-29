@@ -506,6 +506,7 @@ export default {
           const nombreCancion = " - " + songDetails[1]
           this.songData.currentSongName = nombreCancion
           this.songData.currentAuthor = nombreAutor
+          this.songData.imagen = response.coverart
         })
     }, 5000)
 
