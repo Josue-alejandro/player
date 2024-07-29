@@ -438,7 +438,6 @@ export default {
       let links = this.emisoras[this.currentEmisoraId].audio
       const oldLink = links.shift()
       links.push(oldLink)
-      console.log(links)
     },
     checkState() {
       fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
@@ -496,6 +495,19 @@ export default {
       if(this.interacted && this.isPlaying){
         this.checkState()
       }
+      const metadataURL = this.emisoras[this.currentEmisoraId].metadataList[0]
+      
+        fetch(metadataURL).then(response => {
+          if(response.ok){
+            return response.json()
+          }
+        }).then(response => {
+          const songDetails = response.nowplaying.split(' - ')
+          const nombreAutor = songDetails[0]
+          const nombreCancion = " - " + songDetails[1]
+          this.songData.currentSongName = nombreCancion
+          this.songData.currentAuthor = nombreAutor
+        })
     }, 5000)
 
     this.mode = this.playerMode > 0 ? 1 : 0
