@@ -442,7 +442,6 @@ export default {
     checkState() {
       fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
         console.log(response)
-        console.log('ta ok')
         this.isLoading = false
       }).catch(error => {
         console.log(error)
@@ -496,7 +495,7 @@ export default {
         this.checkState()
       }
       const metadataURL = this.emisoras[this.currentEmisoraId].metadataList[0]
-      
+
         fetch(metadataURL).then(response => {
           if(response.ok){
             return response.json()
