@@ -432,7 +432,6 @@ export default {
       });
 
       this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
-
     },
     changeLink(){
       let links = this.emisoras[this.currentEmisoraId].audio
@@ -507,6 +506,7 @@ export default {
           this.songData.currentSongName = nombreCancion
           this.songData.currentAuthor = nombreAutor
           this.songData.imagen = response.coverart
+          console.log(response)
         })
     }, 5000)
 
@@ -551,7 +551,8 @@ export default {
           song_name: station.slogan,
           history: [],
           programming: [],
-          slogan: station.slogan
+          slogan: station.slogan,
+          emisoraImg: imgCover
         }
 
         console.log(audioLinks)
@@ -601,6 +602,7 @@ export default {
                 
                 this.songData.currentAuthor = nombreAutor
                 this.songData.currentSongName = nombreCancion
+                this.songData.imagen = data.coverart
                 console.log(this.emisoras[i])
               }
             })
