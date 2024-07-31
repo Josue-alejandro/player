@@ -9,8 +9,8 @@
         <img class="list_img" :src="register.imagen" :alt="register.nombre">
     </div>
     <div class="song_info">
-        <p class="small" :style="{ color: register.nombre !== register.nombre ? 'white' : 'grey', fontFamily: fontTheme }">{{ register.autor }}</p>
-        <p class="" :style="{ color: register.nombre === register.nombre ? 'white' : 'white', fontFamily: fontTheme }">{{ register.nombre }}</p>
+        <p class="small" :style="{ color: register.nombre !== register.nombre ? 'white' : 'grey', fontFamily: fontTheme }">{{ register.autor.length > 25 ? register.autor.substring(0, 25) + '...' : register.autor  }}</p>
+        <p class="" :style="{ color: register.nombre === register.nombre ? 'white' : 'white', fontFamily: fontTheme }">{{ register.nombre.substring(0, 29) }}</p>
     </div>
     </li>
 </ul>
