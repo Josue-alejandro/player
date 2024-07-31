@@ -63,7 +63,8 @@
           </div>
         </div>
         <div class="emisora">
-          <EmisoraPanel 
+          <EmisoraPanel
+          v-if="emisorasAvaliable"
           @left-handler="$emit('left-handler')" 
           @right-handler="$emit('right-handler')"
           @select-emisora="selectEmisora" 
@@ -157,7 +158,7 @@ export default {
       volumenUp: false,
       minimized: false,
       windowSize: 300,
-      emisorasShow: false,
+      emisorasShow: true,
       programmingShow: false,
       currentDay: {},
       lun: null,
