@@ -308,7 +308,7 @@ export default {
           this.isLoading = false;
           audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
         }catch(error){
-          console.log('paso por aca!', error)
+          console.log(error)
           audio.removeEventListener('canplaythrough', playNewSong); // Eliminar el controlador de eventos después de que se haya reproducido
         }
       };
@@ -431,12 +431,13 @@ export default {
         })
       });
 
-      this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen)
+      this.changeSong(this.canciones[0].cancion, this.canciones[0].nombre, this.canciones[0].autor, this.canciones[0].imagen) 
     },
     changeLink(){
       let links = this.emisoras[this.currentEmisoraId].audio
       const oldLink = links.shift()
       links.push(oldLink)
+      this.emisoras[this.currentEmisoraId].audio = links
     },
     checkState() {
       fetch(this.emisoras[this.currentEmisoraId].audio[0], {mode: 'no-cors'}).then(response => {
@@ -500,13 +501,14 @@ export default {
             return response.json()
           }
         }).then(response => {
-          const songDetails = response.nowplaying.split(' - ')
-          const nombreAutor = songDetails[0]
-          const nombreCancion = " - " + songDetails[1]
-          this.songData.currentSongName = nombreCancion
-          this.songData.currentAuthor = nombreAutor
-          this.songData.imagen = response.coverart
-          console.log(response)
+          if(response.status){
+            const songDetails = response.nowplaying.split(' - ')
+            const nombreAutor = songDetails[0]
+            const nombreCancion = " - " + songDetails[1]
+            this.songData.currentSongName = nombreCancion
+            this.songData.currentAuthor = nombreAutor
+            this.songData.imagen = response.coverart
+          }
         })
     }, 5000)
 
